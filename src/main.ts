@@ -1,6 +1,5 @@
 import { environment } from './environments/environment';
 import { ArcRotateCamera, Engine, EngineInstrumentation, HemisphericLight, MeshBuilder, Scene, SceneInstrumentation, Vector3 } from '@babylonjs/core';
-import '@babylonjs/core/Debug/debugLayer';
 import '@babylonjs/inspector';
 
 async function main(): Promise<void> {
