@@ -7,12 +7,6 @@
   align-items: center;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 //$aspectRatio: "1/1";
 $aspectRatio: "16/9";
 //$aspectRatio: "4/3";
@@ -62,4 +56,19 @@ $aspectRatio: "16/9";
   width: auto;
   height: 100%;
   opacity: 0.8;
+}
+
+.loading {
+  animation: fade-out 1s;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

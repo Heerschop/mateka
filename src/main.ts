@@ -56,6 +56,19 @@ async function main(): Promise<void> {
       showInspector(scene);
     }
   });
+
+  const time = Date.now();
+  let timeout = 1000 - (time - (window as any).appStartDate);
+
+  if (timeout < 0) timeout = 0;
+
+  setTimeout(() => {
+    const loading = document.getElementById('loading');
+
+    loading.className = 'loading';
+
+    loading.onanimationend = () => loading.remove();
+  }, timeout);
 }
 
 async function showInspector(scene: Scene): Promise<void> {
