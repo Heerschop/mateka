@@ -2,11 +2,12 @@
   "scripts": {
     "serve:$config=": "ng serve --project=pwa --configuration=$config",
     "build:$config=": "ng build --project=pwa --configuration=$config,optimize",
-    "lint": [
+    "lint:check": [
       "echo Linting sources files...",
       "tslint --project ./tsconfig.app.json $*",
       "echo No lint errors found...",
       ""
-    ]
+    ],
+    "lint:write": "lint:check --fix"
   }
 }
