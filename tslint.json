@@ -111,7 +111,7 @@
       "options": [
         "ban-keywords",
         "check-format",
-        "allow-pascal-case"
+        "allow-leading-underscore"
       ]
     },
     "whitespace": {
@@ -139,7 +139,7 @@
     "no-shadowed-variable": false,
     "max-classes-per-file": [
       true,
-      1
+      2
     ],
     "no-consecutive-blank-lines": true
   },

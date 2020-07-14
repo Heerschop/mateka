@@ -10,7 +10,7 @@ export class Loader {
     this.element = document.getElementById(this.elementId);
   }
 
-  show() {
+  show(): void {
     const element = document.createElement('div');
 
     element.id = this.elementId;
@@ -28,7 +28,7 @@ export class Loader {
     this.element = element;
   }
 
-  hide() {
+  hide(): void {
     let timeout = 0;
 
     if (!this.loadTime) {

@@ -24,7 +24,7 @@ export class Inspector {
     }
   }
 
-  public show() {
+  public show(): void {
     if (!this.visible) {
       this.scene.debugLayer.show({
         overlay: false,
@@ -36,13 +36,13 @@ export class Inspector {
     this.updateLocation(true);
   }
 
-  public hide() {
+  public hide(): void {
     this.scene.debugLayer.hide();
 
     this.updateLocation(false);
   }
 
-  private updateLocation(visible: boolean) {
+  private updateLocation(visible: boolean): void {
     const location = window.location.href.replace('?inspect=true', '').replace('?inspect=false', '');
 
     window.history.replaceState({}, window.location.pathname, location + '?inspect=' + visible);

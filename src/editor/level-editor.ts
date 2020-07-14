@@ -31,7 +31,7 @@ export class LevelEditor implements IDisposable {
     this.enableCursor();
   }
 
-  private createCursorMesh() {
+  private createCursorMesh(): void {
     const box = Mesh.CreateLines('box', [
       new Vector3(-0.5, 0.0, -0.5), new Vector3(+0.5, 0.0, -0.5),
       new Vector3(+0.5, 0.0, +0.5), new Vector3(-0.5, 0.0, +0.5),
@@ -57,7 +57,7 @@ export class LevelEditor implements IDisposable {
     highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
   }
 
-  private createCursorMesh2() {
+  private createCursorMesh2(): void {
     const size = {
       width: 1,
       height: 1,
@@ -74,21 +74,21 @@ export class LevelEditor implements IDisposable {
     highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
   }
 
-  private enableCursor() {
+  private enableCursor(): void {
     this.createCursorMesh();
 
     this.controlElement.addEventListener('mousemove', this.onMouseMove);
     this.controlElement.addEventListener('mousedown', this.onMouseClick);
   }
 
-  private disableCursor() {
+  private disableCursor(): void {
     this.controlElement.removeEventListener('mousemove', this.onMouseMove);
     this.controlElement.removeEventListener('mousedown', this.onMouseClick);
 
     if (this.cursor) this.cursor.dispose();
   }
 
-  onMouseClick(event: MouseEvent) {
+  onMouseClick(event: MouseEvent): void {
     const info = this.scene.pick(event.offsetX, event.offsetY);
 
     if (info && info.hit && info.pickedMesh) {
@@ -107,7 +107,7 @@ export class LevelEditor implements IDisposable {
     }
   }
 
-  onMouseMove(event: MouseEvent) {
+  onMouseMove(event: MouseEvent): void {
     if (!event.shiftKey) {
       const info = this.renderGrid.pick(event.offsetX, event.offsetY);
 
@@ -116,7 +116,7 @@ export class LevelEditor implements IDisposable {
 
         position.x -= (position.x + 1000) % 1 - 0.5;
         position.z -= (position.z + 1000) % 1 - 0.5;
-        this.cursor!.position = position;
+        this.cursor.position = position;
       }
     }
   }

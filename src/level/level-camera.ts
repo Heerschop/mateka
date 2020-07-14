@@ -32,7 +32,7 @@ export class LevelCamera extends ArcRotateCamera {
     this.updateCameraOrtho();
   }
 
-  private updateCameraOrtho() {
+  private updateCameraOrtho(): void {
     const size = this.size / this._scale;
 
     this.mode = Camera.ORTHOGRAPHIC_CAMERA;
@@ -88,7 +88,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
   detachControl(element: HTMLElement): void {
   }
 
-  private onMouseMove(event: MouseEvent) {
+  private onMouseMove(event: MouseEvent): void {
     if (this.camera) {
       if (event.button === 1) {
       } else {
@@ -98,7 +98,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     }
   }
 
-  private onMouseAuxClick(event: MouseEvent) {
+  private onMouseAuxClick(event: MouseEvent): void {
     if (event.button === 1 && this.camera && this.defaults) {
       this.camera.target = Vector3.Zero();
       this.camera.scale = this.defaults.scale;
@@ -109,7 +109,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     }
   }
 
-  private onMouseWheel(event: WheelEvent) {
+  private onMouseWheel(event: WheelEvent): void {
     if (this.camera) {
       let scale = this.camera.scale;
 
@@ -124,7 +124,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     }
   }
 
-  private onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent): void {
     if (this.element && this.camera && event.key === 'Shift') {
       this.element.addEventListener('auxclick', this.onMouseAuxClick);
       this.element.addEventListener('wheel', this.onMouseWheel);
@@ -132,7 +132,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     }
   }
 
-  private onKeyUp(event: KeyboardEvent) {
+  private onKeyUp(event: KeyboardEvent): void {
     if (this.element && this.camera && event.key === 'Shift') {
       this.element.removeEventListener('auxclick', this.onMouseAuxClick);
       this.element.removeEventListener('wheel', this.onMouseWheel);
@@ -140,7 +140,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     }
   }
 
-  attachControl(element: HTMLElement, noPreventDefault?: boolean) {
+  attachControl(element: HTMLElement, noPreventDefault?: boolean): void {
     if (!this.camera) throw new Error('No camera!');
 
     this.defaults = {

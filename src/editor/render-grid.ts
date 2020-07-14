@@ -54,7 +54,7 @@ export class RenderGrid implements IDisposable {
 
     const edgesWidth = scene.activeCamera && scene.activeCamera.mode === Camera.PERSPECTIVE_CAMERA ? 1 : 4;
 
-    new WorldAxis(1, utilityLayerScene, this.glowLayer, edgesWidth);
+    const axis = new WorldAxis(1, utilityLayerScene, this.glowLayer, edgesWidth);
   }
 
   dispose(): void {
