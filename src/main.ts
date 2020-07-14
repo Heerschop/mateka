@@ -1,6 +1,19 @@
 import { environment } from './environments/environment';
-import { ArcRotateCamera, Engine, EngineInstrumentation, HemisphericLight, MeshBuilder, Scene, SceneInstrumentation, Vector3 } from '@babylonjs/core';
+import { Engine, EngineInstrumentation, Scene, SceneInstrumentation } from '@babylonjs/core';
+import { LevelEditor } from './editor/level-editor';
 import '@babylonjs/inspector';
+import { LevelCamera } from './level/level-camera';
+
+class Main {
+  constructor() {
+
+  }
+
+  runRenderLoop() {
+
+  }
+
+}
 
 async function main(): Promise<void> {
   console.log('version: ', environment.app.version + ' (' + environment.app.env + ')');
@@ -9,26 +22,8 @@ async function main(): Promise<void> {
   const engine = new Engine(canvas, true);
   const controlElement = document.documentElement;
   const scene = new Scene(engine);
-
-  // Create a basic BJS Scene object.
-  // Create a ArcRotateCamera, and set its Target to (x:0, y:1, z:0).
-  const camera = new ArcRotateCamera('camera1', Math.PI / 2, Math.PI / 2.5, 8, new Vector3(0, 1, 0), scene);
-
-  // Attach the camera to the canvas.
-  camera.attachControl(controlElement, false);
-
-  // Create a basic light, aiming 0,1,0 - meaning, to the sky.
-  const light = new HemisphericLight('light1', new Vector3(0, 1, 0), scene);
-
-  // Create a built-in "sphere" shape; with 16 segments and diameter of 2.
-  const sphere = MeshBuilder.CreateSphere('sphere', { segments: 16, diameter: 2 }, scene);
-
-  // Move the sphere upward 1/2 of its height.
-  sphere.position.y = 1;
-
-  // Create a built-in "ground" shape.
-  const ground = MeshBuilder.CreateGround('ground', { width: 6, height: 6, subdivisions: 2 }, scene);
-
+  const camera = new LevelCamera('LevelCamera', 16, scene);
+  const editor = new LevelEditor(camera, controlElement, scene);
   const instrumentation = {
     engine: new EngineInstrumentation(engine),
     scene: new SceneInstrumentation(scene),
@@ -57,10 +52,12 @@ async function main(): Promise<void> {
     }
   });
 
-  const time = Date.now();
-  let timeout = 1000 - (time - (window as any).appStartDate);
+  const loadTime = Date.now() - (window as any).appStartDate;
+  let timeout = 1000 - loadTime;
 
   if (timeout < 0) timeout = 0;
+
+  console.log('loadTime:', loadTime);
 
   setTimeout(() => {
     const loading = document.getElementById('loading');
