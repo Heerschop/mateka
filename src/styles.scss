@@ -58,10 +58,14 @@ $aspectRatio: "16/9";
   opacity: 0.8;
 }
 
-.loading {
+.loading-fade-out {
   animation: fade-out 1s;
   animation-fill-mode: forwards;
   pointer-events: none;
+}
+
+.loading-fade-in {
+  animation: fade-in 0.75s;
 }
 
 @keyframes fade-out {
@@ -70,5 +74,15 @@ $aspectRatio: "16/9";
   }
   to {
     opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

@@ -3,6 +3,8 @@ import { Engine, EngineInstrumentation, Scene, SceneInstrumentation } from '@bab
 import { LevelEditor } from './editor/level-editor';
 import '@babylonjs/inspector';
 import { LevelCamera } from './level/level-camera';
+import { Inspector } from './debug/inspector';
+import { Loader } from './loader/loader'
 
 class Main {
   constructor() {
@@ -24,6 +26,7 @@ async function main(): Promise<void> {
   const scene = new Scene(engine);
   const camera = new LevelCamera('LevelCamera', 16, scene);
   const editor = new LevelEditor(camera, controlElement, scene);
+  const loader = new Loader('loading');
   const instrumentation = {
     engine: new EngineInstrumentation(engine),
     scene: new SceneInstrumentation(scene),
@@ -31,6 +34,7 @@ async function main(): Promise<void> {
 
   const fps = document.getElementById('fps');
   const drawCounter = document.getElementById('draw-counter');
+  const inspector = new Inspector(scene, document.getElementById('inspector'))
 
   engine.runRenderLoop(() => {
     scene.render();
@@ -40,50 +44,18 @@ async function main(): Promise<void> {
 
   window.addEventListener('resize', engine.resize.bind(engine));
 
-  if (window.location.search.includes('inspect=true')) {
-    setTimeout(() => {
-      showInspector(scene);
-    }, 2000);
-  }
+
+  loader.hide();
 
   window.addEventListener('keydown', (event) => {
-    if (event.code === 'KeyI') {
-      showInspector(scene);
+    if (event.code === 'KeyL') {
+      if (loader.visible)
+        loader.hide();
+      else
+        loader.show();
     }
   });
 
-  const loadTime = Date.now() - (window as any).appStartDate;
-  let timeout = 1000 - loadTime;
-
-  if (timeout < 0) timeout = 0;
-
-  console.log('loadTime:', loadTime);
-
-  setTimeout(() => {
-    const loading = document.getElementById('loading');
-
-    loading.className = 'loading';
-
-    loading.onanimationend = () => loading.remove();
-  }, timeout);
-}
-
-async function showInspector(scene: Scene): Promise<void> {
-  const visible = scene.debugLayer.isVisible();
-
-  if (!visible) {
-    const layer = await scene.debugLayer.show({
-      overlay: false,
-      globalRoot: document.getElementById('inspector'),
-      embedMode: true,
-    });
-  } else {
-    scene.debugLayer.hide();
-  }
-
-  const location = window.location.href.replace('?inspect=true', '').replace('?inspect=false', '');
-
-  window.history.replaceState({}, window.location.pathname, location + '?inspect=' + !visible);
 }
 
 main();
