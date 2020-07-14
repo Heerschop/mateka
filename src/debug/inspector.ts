@@ -8,10 +8,12 @@ export class Inspector {
   constructor(private readonly scene: Scene, private readonly element: HTMLElement) {
     window.addEventListener('keydown', (event) => {
       if (event.code === 'KeyI') {
-        if (this.visible)
+        if (this.visible) {
           this.hide();
-        else
+        }
+        else {
           this.show();
+        }
       }
     });
 

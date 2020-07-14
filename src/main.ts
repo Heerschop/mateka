@@ -4,7 +4,7 @@ import { LevelEditor } from './editor/level-editor';
 import '@babylonjs/inspector';
 import { LevelCamera } from './level/level-camera';
 import { Inspector } from './debug/inspector';
-import { Loader } from './loader/loader'
+import { Loader } from './loader/loader';
 
 class Main {
   constructor() {
@@ -34,7 +34,7 @@ async function main(): Promise<void> {
 
   const fps = document.getElementById('fps');
   const drawCounter = document.getElementById('draw-counter');
-  const inspector = new Inspector(scene, document.getElementById('inspector'))
+  const inspector = new Inspector(scene, document.getElementById('inspector'));
 
   engine.runRenderLoop(() => {
     scene.render();
@@ -44,15 +44,16 @@ async function main(): Promise<void> {
 
   window.addEventListener('resize', engine.resize.bind(engine));
 
-
   loader.hide();
 
   window.addEventListener('keydown', (event) => {
     if (event.code === 'KeyL') {
-      if (loader.visible)
+      if (loader.visible) {
         loader.hide();
-      else
+      }
+      else {
         loader.show();
+      }
     }
   });
 

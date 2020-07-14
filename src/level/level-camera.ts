@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Scene, Camera, Vector3, ICameraInput, Nullable } from "@babylonjs/core";
+import { ArcRotateCamera, Camera, ICameraInput, Nullable, Scene, Vector3 } from '@babylonjs/core';
 
 export class LevelCamera extends ArcRotateCamera {
   private _size: number;
@@ -61,7 +61,6 @@ export class LevelCamera extends ArcRotateCamera {
 }
 
 export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
-  camera: Nullable<LevelCamera> = null;
 
   constructor(public readonly minScale: number, public readonly maxScale: number) {
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -70,6 +69,13 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
   }
+  camera: Nullable<LevelCamera> = null;
+
+  checkInputs?: () => void;
+
+  private defaults?: { scale: number, alpha: number, beta: number };
+  private noPreventDefault?: boolean;
+  private element?: HTMLElement;
 
   getClassName(): string {
     return 'LevelCameraInput';
@@ -81,8 +87,6 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
 
   detachControl(element: HTMLElement): void {
   }
-
-  checkInputs?: () => void;
 
   private onMouseMove(event: MouseEvent) {
     if (this.camera) {
@@ -120,10 +124,6 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     }
   }
 
-  private defaults?: { scale: number, alpha: number, beta: number };
-  private noPreventDefault?: boolean;
-  private element?: HTMLElement;
-
   private onKeyDown(event: KeyboardEvent) {
     if (this.element && this.camera && event.key === 'Shift') {
       this.element.addEventListener('auxclick', this.onMouseAuxClick);
@@ -141,7 +141,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
   }
 
   attachControl(element: HTMLElement, noPreventDefault?: boolean) {
-    if (!this.camera) throw 'No camera!'
+    if (!this.camera) throw new Error('No camera!');
 
     this.defaults = {
       scale: this.camera.scale,
@@ -158,4 +158,3 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     element.addEventListener('keyup', this.onKeyUp);
   }
 }
-

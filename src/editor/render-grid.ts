@@ -1,14 +1,13 @@
-import { Scene, IDisposable, UtilityLayerRenderer, Mesh, Color3, Texture, DynamicTexture, StandardMaterial, MultiMaterial, Vector3, MeshBuilder, Matrix, HighlightLayer, Color4, GlowLayer, LinesMesh, Camera, Nullable, PickingInfo } from '@babylonjs/core';
+import { Camera, Color3, Color4, DynamicTexture, GlowLayer, HighlightLayer, IDisposable, LinesMesh, Matrix, Mesh, MeshBuilder, MultiMaterial, Nullable, PickingInfo, Scene, StandardMaterial, Texture, UtilityLayerRenderer, Vector3 } from '@babylonjs/core';
 import { GridMaterial } from '@babylonjs/materials/grid';
 
 // https://github.com/BabylonJS/Babylon.js/blob/master/inspector/src/components/actionTabs/tabs/propertyGrids/renderGridPropertyGridComponent.tsx#L40
 export class RenderGrid implements IDisposable {
   private gridMesh: Mesh;
-  //private textMesh: Mesh;
+  // private textMesh: Mesh;
   private utilityLayerRenderer: UtilityLayerRenderer;
   public readonly utilityLayerScene: Scene;
   public readonly glowLayer?: GlowLayer;
-
 
   constructor(readonly scene: Scene, readonly size = 100) {
     this.utilityLayerRenderer = new UtilityLayerRenderer(scene, false);
@@ -19,7 +18,7 @@ export class RenderGrid implements IDisposable {
 
     this.utilityLayerScene = utilityLayerScene;
 
-    this.gridMesh = Mesh.CreateGround("GridMesh", 1.0, 1.0, 1.0, utilityLayerScene);
+    this.gridMesh = Mesh.CreateGround('GridMesh', 1.0, 1.0, 1.0, utilityLayerScene);
 
     this.gridMesh.scaling.x = size;
     this.gridMesh.scaling.z = size;
@@ -27,7 +26,7 @@ export class RenderGrid implements IDisposable {
     // this.gridMesh.position.y -= 0.01;
     this.gridMesh.isPickable = false;
 
-    const material = new GridMaterial("GridMaterial", utilityLayerScene);
+    const material = new GridMaterial('GridMaterial', utilityLayerScene);
 
     material.majorUnitFrequency = 10;
     material.minorUnitVisibility = 0.3;
@@ -37,7 +36,7 @@ export class RenderGrid implements IDisposable {
     material.lineColor = new Color3(1.0, 1.0, 1.0);
     material.opacity = 0.8;
     material.zOffset = 1.0;
-    material.opacityTexture = new Texture("assets/textures/render-grid-opacity.png", utilityLayerScene);
+    material.opacityTexture = new Texture('assets/textures/render-grid-opacity.png', utilityLayerScene);
 
     this.gridMesh.material = material;
 
@@ -51,7 +50,7 @@ export class RenderGrid implements IDisposable {
     }
 
     this.glowLayer = new GlowLayer('GlowLayer', utilityLayerScene);
-    this.glowLayer.intensity = 0.5
+    this.glowLayer.intensity = 0.5;
 
     const edgesWidth = scene.activeCamera && scene.activeCamera.mode === Camera.PERSPECTIVE_CAMERA ? 1 : 4;
 
@@ -76,7 +75,7 @@ export class RenderGrid implements IDisposable {
     const textureSize = {
       width: planeSize.width * 400,
       height: planeSize.height * 400,
-    }
+    };
     const plane = MeshBuilder.CreatePlane(name, planeSize, scene);
     const texture = new DynamicTexture('DynamicTexture', textureSize, scene, true);
 
@@ -92,7 +91,7 @@ export class RenderGrid implements IDisposable {
     const offset = (0.75 - (0.30 * text.length)) * size;
 
     plane.position.z += 0.01 + planeSize.height / 2;
-    plane.position.x += 0.01 + offset;// + planeSize.width / 2;
+    plane.position.x += 0.01 + offset; // + planeSize.width / 2;
     plane.position.y += 0.01;
 
     plane.rotation.x = +Math.PI / 2;
@@ -103,7 +102,6 @@ export class RenderGrid implements IDisposable {
   }
 
 }
-
 
 class WorldAxis {
   constructor(size: number, scene: Scene, glowLayer?: GlowLayer, readonly edgesWidth = 4.0) {
@@ -130,7 +128,6 @@ class WorldAxis {
 
     if (glowLayer) glowLayer.referenceMeshToUseItsOwnMaterial(axisY);
 
-
     const axisZ = Mesh.CreateLines('axisZ', [
       Vector3.Zero(), new Vector3(0, 0, size), new Vector3(0, -0.05 * size, size * 0.95),
       new Vector3(0, 0, size), new Vector3(0, 0.05 * size, size * 0.95)
@@ -145,7 +142,7 @@ class WorldAxis {
     WorldAxis.createTextPlane(new Vector3(-0.03, +0.90 * size, -0.03 * size), 'Y', axisY.color, size / 10, scene).rotation.y += -Math.PI / 4;
     WorldAxis.createTextPlane(new Vector3(+0.90 * size, +0.06 * size, +0.00), 'X', axisX.color, size / 10, scene);
     WorldAxis.createTextPlane(new Vector3(+0.00, +0.06 * size, +0.90 * size), 'Z', axisZ.color, size / 10, scene).rotation.y += -Math.PI / 2;
-  };
+  }
 
   private static createTextPlane(position: Vector3, text: string, color: Color3, size: number, scene: Scene): Mesh {
     const dynamicTexture = new DynamicTexture('DynamicTexture', 80, scene, true);

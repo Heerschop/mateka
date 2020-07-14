@@ -1,5 +1,5 @@
 import { RenderGrid } from './render-grid';
-import { IDisposable, Scene, MeshBuilder, StandardMaterial, Color3, HighlightLayer, Vector3, Mesh } from '@babylonjs/core';
+import { Color3, HighlightLayer, IDisposable, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
 import { LevelCamera, LevelCameraInput } from '../level/level-camera';
 
 export class LevelEditor implements IDisposable {
@@ -9,7 +9,6 @@ export class LevelEditor implements IDisposable {
     preventDefaultOnPointerDown: boolean
     preventDefaultOnPointerUp: boolean
   };
-
 
   constructor(camera: LevelCamera, private controlElement: HTMLElement, private readonly scene: Scene, gridSize: number = 100) {
     this.renderGrid = new RenderGrid(scene, gridSize);
@@ -54,7 +53,7 @@ export class LevelEditor implements IDisposable {
     const scene = this.renderGrid.utilityLayerScene;
     this.cursor = box;
 
-    const highlight = new HighlightLayer("hl1", scene);
+    const highlight = new HighlightLayer('hl1', scene);
     highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
   }
 
@@ -71,10 +70,9 @@ export class LevelEditor implements IDisposable {
 
     this.cursor.material = material;
 
-    const highlight = new HighlightLayer("hl1", scene);
+    const highlight = new HighlightLayer('hl1', scene);
     highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
   }
-
 
   private enableCursor() {
     this.createCursorMesh();
@@ -114,7 +112,7 @@ export class LevelEditor implements IDisposable {
       const info = this.renderGrid.pick(event.offsetX, event.offsetY);
 
       if (info && info.pickedPoint) {
-        const position = info.pickedPoint
+        const position = info.pickedPoint;
 
         position.x -= (position.x + 1000) % 1 - 0.5;
         position.z -= (position.z + 1000) % 1 - 0.5;
@@ -122,7 +120,6 @@ export class LevelEditor implements IDisposable {
       }
     }
   }
-
 
   dispose(): void {
     this.disableCursor();

@@ -14,7 +14,7 @@
     "tools": {
       "lint:Lint TypeScript files": {
         "check:Check linting errors": "lint:check || true",
-        "write:Fixes linting errors": "lint:write"
+        "write:Fix linting errors": "lint:write"
       }
     }
   },
