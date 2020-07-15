@@ -32,16 +32,6 @@ export class LevelCamera extends ArcRotateCamera {
     this.updateCameraOrtho();
   }
 
-  private updateCameraOrtho(): void {
-    const size = this.size / this._scale;
-
-    this.mode = Camera.ORTHOGRAPHIC_CAMERA;
-    this.orthoTop = size / this._aspect;
-    this.orthoBottom = -size / this._aspect;
-    this.orthoLeft = -size;
-    this.orthoRight = size;
-  }
-
   constructor(name: string, levelSize: number, scene: Scene, aspect = 1.75, scale = 1.00) {
     super(
       name,
@@ -58,9 +48,26 @@ export class LevelCamera extends ArcRotateCamera {
 
     this.inputs.clear();
   }
+
+  private updateCameraOrtho(): void {
+    const size = this.size / this._scale;
+
+    this.mode = Camera.ORTHOGRAPHIC_CAMERA;
+    this.orthoTop = size / this._aspect;
+    this.orthoBottom = -size / this._aspect;
+    this.orthoLeft = -size;
+    this.orthoRight = size;
+  }
 }
 
 export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
+  camera: Nullable<LevelCamera> = null;
+
+  checkInputs?: () => void;
+
+  private defaults?: { scale: number, alpha: number, beta: number };
+  private noPreventDefault?: boolean;
+  private element?: HTMLElement;
 
   constructor(public readonly minScale: number, public readonly maxScale: number) {
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -69,13 +76,6 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
   }
-  camera: Nullable<LevelCamera> = null;
-
-  checkInputs?: () => void;
-
-  private defaults?: { scale: number, alpha: number, beta: number };
-  private noPreventDefault?: boolean;
-  private element?: HTMLElement;
 
   getClassName(): string {
     return 'LevelCameraInput';
@@ -86,6 +86,24 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
   }
 
   detachControl(element: HTMLElement): void {
+  }
+
+  attachControl(element: HTMLElement, noPreventDefault?: boolean): void {
+    if (!this.camera) throw new Error('No camera!');
+
+    this.defaults = {
+      scale: this.camera.scale,
+      alpha: this.camera.alpha,
+      beta: this.camera.beta,
+    };
+
+    this.noPreventDefault = noPreventDefault;
+    this.element = element;
+
+    this.detachControl(element);
+
+    element.addEventListener('keydown', this.onKeyDown);
+    element.addEventListener('keyup', this.onKeyUp);
   }
 
   private onMouseMove(event: MouseEvent): void {
@@ -138,23 +156,5 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
       this.element.removeEventListener('wheel', this.onMouseWheel);
       this.camera.inputs.removeByType('ArcRotateCameraPointersInput');
     }
-  }
-
-  attachControl(element: HTMLElement, noPreventDefault?: boolean): void {
-    if (!this.camera) throw new Error('No camera!');
-
-    this.defaults = {
-      scale: this.camera.scale,
-      alpha: this.camera.alpha,
-      beta: this.camera.beta,
-    };
-
-    this.noPreventDefault = noPreventDefault;
-    this.element = element;
-
-    this.detachControl(element);
-
-    element.addEventListener('keydown', this.onKeyDown);
-    element.addEventListener('keyup', this.onKeyUp);
   }
 }

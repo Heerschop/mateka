@@ -31,6 +31,48 @@ export class LevelEditor implements IDisposable {
     this.enableCursor();
   }
 
+  onMouseClick(event: MouseEvent): void {
+    const info = this.scene.pick(event.offsetX, event.offsetY);
+
+    if (info && info.hit && info.pickedMesh) {
+      let pickedMesh = info.pickedMesh;
+
+      if (!pickedMesh.isAnInstance) {
+        const mesh = info.pickedMesh as Mesh;
+
+        if (mesh.instances.length > 1) {
+          pickedMesh = mesh.instances[0];
+          mesh.position = pickedMesh.position;
+        }
+      }
+
+      pickedMesh.dispose();
+    }
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (!event.shiftKey) {
+      const info = this.renderGrid.pick(event.offsetX, event.offsetY);
+
+      if (info && info.pickedPoint) {
+        const position = info.pickedPoint;
+
+        position.x -= (position.x + 1000) % 1 - 0.5;
+        position.z -= (position.z + 1000) % 1 - 0.5;
+        this.cursor.position = position;
+      }
+    }
+  }
+
+  dispose(): void {
+    this.disableCursor();
+
+    this.renderGrid.dispose();
+
+    this.scene.preventDefaultOnPointerDown = this.default.preventDefaultOnPointerDown;
+    this.scene.preventDefaultOnPointerUp = this.default.preventDefaultOnPointerUp;
+  }
+
   private createCursorMesh(): void {
     const box = Mesh.CreateLines('box', [
       new Vector3(-0.5, 0.0, -0.5), new Vector3(+0.5, 0.0, -0.5),
@@ -86,47 +128,5 @@ export class LevelEditor implements IDisposable {
     this.controlElement.removeEventListener('mousedown', this.onMouseClick);
 
     if (this.cursor) this.cursor.dispose();
-  }
-
-  onMouseClick(event: MouseEvent): void {
-    const info = this.scene.pick(event.offsetX, event.offsetY);
-
-    if (info && info.hit && info.pickedMesh) {
-      let pickedMesh = info.pickedMesh;
-
-      if (!pickedMesh.isAnInstance) {
-        const mesh = info.pickedMesh as Mesh;
-
-        if (mesh.instances.length > 1) {
-          pickedMesh = mesh.instances[0];
-          mesh.position = pickedMesh.position;
-        }
-      }
-
-      pickedMesh.dispose();
-    }
-  }
-
-  onMouseMove(event: MouseEvent): void {
-    if (!event.shiftKey) {
-      const info = this.renderGrid.pick(event.offsetX, event.offsetY);
-
-      if (info && info.pickedPoint) {
-        const position = info.pickedPoint;
-
-        position.x -= (position.x + 1000) % 1 - 0.5;
-        position.z -= (position.z + 1000) % 1 - 0.5;
-        this.cursor.position = position;
-      }
-    }
-  }
-
-  dispose(): void {
-    this.disableCursor();
-
-    this.renderGrid.dispose();
-
-    this.scene.preventDefaultOnPointerDown = this.default.preventDefaultOnPointerDown;
-    this.scene.preventDefaultOnPointerUp = this.default.preventDefaultOnPointerUp;
   }
 }

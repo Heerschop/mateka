@@ -3,11 +3,11 @@ import { GridMaterial } from '@babylonjs/materials/grid';
 
 // https://github.com/BabylonJS/Babylon.js/blob/master/inspector/src/components/actionTabs/tabs/propertyGrids/renderGridPropertyGridComponent.tsx#L40
 export class RenderGrid implements IDisposable {
+  public readonly utilityLayerScene: Scene;
+  public readonly glowLayer?: GlowLayer;
   private gridMesh: Mesh;
   // private textMesh: Mesh;
   private utilityLayerRenderer: UtilityLayerRenderer;
-  public readonly utilityLayerScene: Scene;
-  public readonly glowLayer?: GlowLayer;
 
   constructor(readonly scene: Scene, readonly size = 100) {
     this.utilityLayerRenderer = new UtilityLayerRenderer(scene, false);
