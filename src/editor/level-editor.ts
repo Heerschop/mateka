@@ -31,7 +31,7 @@ export class LevelEditor implements IDisposable {
     this.enableCursor();
   }
 
-  onMouseClick(event: MouseEvent): void {
+  public onMouseClick(event: MouseEvent): void {
     const info = this.scene.pick(event.offsetX, event.offsetY);
 
     if (info && info.hit && info.pickedMesh) {
@@ -50,7 +50,7 @@ export class LevelEditor implements IDisposable {
     }
   }
 
-  onMouseMove(event: MouseEvent): void {
+  public onMouseMove(event: MouseEvent): void {
     if (!event.shiftKey) {
       const info = this.renderGrid.pick(event.offsetX, event.offsetY);
 
@@ -64,7 +64,7 @@ export class LevelEditor implements IDisposable {
     }
   }
 
-  dispose(): void {
+  public dispose(): void {
     this.disableCursor();
 
     this.renderGrid.dispose();

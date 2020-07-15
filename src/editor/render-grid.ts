@@ -57,17 +57,17 @@ export class RenderGrid implements IDisposable {
     const axis = new WorldAxis(1, utilityLayerScene, this.glowLayer, edgesWidth);
   }
 
-  dispose(): void {
+  public dispose(): void {
     this.utilityLayerRenderer.dispose();
   }
 
-  pick(x: number, y: number): Nullable<PickingInfo> {
+  public pick(x: number, y: number): Nullable<PickingInfo> {
     return this.utilityLayerScene.pick(x, y, (mesh) => mesh === this.gridMesh);
   }
 
   // https://forum.babylonjs.com/t/how-are-vertexbuffers-associated-with-material-property-for-an-instancedmesh/6275
   // https://www.babylonjs-playground.com/#EK6GAC#13
-  createTextPlane(name: string, scene: Scene, text: string, size: number): Mesh {
+  public createTextPlane(name: string, scene: Scene, text: string, size: number): Mesh {
     const planeSize = {
       width: size * 1.5,
       height: size / 1.3,

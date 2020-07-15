@@ -5,29 +5,29 @@ export class LevelCamera extends ArcRotateCamera {
   private _aspect: number;
   private _scale: number;
 
-  get size(): number {
+  public get size(): number {
     return this._size;
   }
 
-  set size(value: number) {
+  public set size(value: number) {
     this._size = value;
     this.updateCameraOrtho();
   }
 
-  get aspect(): number {
+  public get aspect(): number {
     return this._aspect;
   }
 
-  set aspect(value: number) {
+  public set aspect(value: number) {
     this._aspect = value;
     this.updateCameraOrtho();
   }
 
-  get scale(): number {
+  public get scale(): number {
     return this._scale;
   }
 
-  set scale(value: number) {
+  public set scale(value: number) {
     this._scale = value;
     this.updateCameraOrtho();
   }
@@ -61,9 +61,9 @@ export class LevelCamera extends ArcRotateCamera {
 }
 
 export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
-  camera: Nullable<LevelCamera> = null;
+  public camera: Nullable<LevelCamera> = null;
 
-  checkInputs?: () => void;
+  public checkInputs?: () => void;
 
   private defaults?: { scale: number, alpha: number, beta: number };
   private noPreventDefault?: boolean;
@@ -77,18 +77,18 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     this.onKeyUp = this.onKeyUp.bind(this);
   }
 
-  getClassName(): string {
+  public getClassName(): string {
     return 'LevelCameraInput';
   }
 
-  getSimpleName(): string {
+  public getSimpleName(): string {
     return 'mouse';
   }
 
-  detachControl(element: HTMLElement): void {
+  public detachControl(element: HTMLElement): void {
   }
 
-  attachControl(element: HTMLElement, noPreventDefault?: boolean): void {
+  public attachControl(element: HTMLElement, noPreventDefault?: boolean): void {
     if (!this.camera) throw new Error('No camera!');
 
     this.defaults = {

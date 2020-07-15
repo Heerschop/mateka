@@ -11,7 +11,7 @@ class Main {
 
   }
 
-  runRenderLoop(): void {
+  public runRenderLoop(): void {
 
   }
 

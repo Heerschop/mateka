@@ -2,7 +2,7 @@ export class Loader {
   private loadTime?: number;
   private element: HTMLElement;
 
-  get visible(): boolean {
+  public get visible(): boolean {
     return !!this.element;
   }
 
@@ -10,7 +10,7 @@ export class Loader {
     this.element = document.getElementById(this.elementId);
   }
 
-  show(): void {
+  public show(): void {
     const element = document.createElement('div');
 
     element.id = this.elementId;
@@ -28,7 +28,7 @@ export class Loader {
     this.element = element;
   }
 
-  hide(): void {
+  public hide(): void {
     let timeout = 0;
 
     if (!this.loadTime) {

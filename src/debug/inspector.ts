@@ -1,7 +1,7 @@
 import { Scene } from '@babylonjs/core';
 
 export class Inspector {
-  get visible(): boolean {
+  public get visible(): boolean {
     return this.scene.debugLayer.isVisible();
   }
 
