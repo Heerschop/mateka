@@ -69,6 +69,7 @@
       "check-constructor",
       "check-parameter-property"
     ],
+    "no-for-in": true,
     "no-console": [
       true,
       "debug",
@@ -164,7 +165,11 @@
       true,
       2
     ],
-    "no-consecutive-blank-lines": true
+    "no-consecutive-blank-lines": true,
+    "no-unused-expression": [
+      true,
+      "allow-new"
+    ]
   },
   "rulesDirectory": []
 }

@@ -1,4 +1,4 @@
-import { Camera, Color3, Color4, DynamicTexture, GlowLayer, HighlightLayer, IDisposable, LinesMesh, Matrix, Mesh, MeshBuilder, MultiMaterial, Nullable, PickingInfo, Scene, StandardMaterial, Texture, UtilityLayerRenderer, Vector3 } from '@babylonjs/core';
+import { Camera, Color3, DynamicTexture, GlowLayer, IDisposable, Mesh, MeshBuilder, Nullable, PickingInfo, Scene, StandardMaterial, Texture, UtilityLayerRenderer, Vector3 } from '@babylonjs/core';
 import { GridMaterial } from '@babylonjs/materials/grid';
 
 // https://github.com/BabylonJS/Babylon.js/blob/master/inspector/src/components/actionTabs/tabs/propertyGrids/renderGridPropertyGridComponent.tsx#L40
@@ -54,7 +54,7 @@ export class RenderGrid implements IDisposable {
 
     const edgesWidth = scene.activeCamera && scene.activeCamera.mode === Camera.PERSPECTIVE_CAMERA ? 1 : 4;
 
-    const axis = new WorldAxis(1, utilityLayerScene, this.glowLayer, edgesWidth);
+    new WorldAxis(1, utilityLayerScene, this.glowLayer, edgesWidth);
   }
 
   public dispose(): void {
