@@ -7,49 +7,50 @@ import { Inspector } from './debug/inspector';
 import { Loader } from './loader/loader';
 
 class Main {
-  public constructor() {}
+  private readonly engine: Engine;
+  private readonly scene: Scene;
+  private readonly loader: Loader;
 
-  public runRenderLoop(): void {}
+  public constructor(canvasId: string) {
+    const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+    const engine = new Engine(canvas, true);
+    const scene = new Scene(engine);
+    const loader = new Loader('loading');
+
+    console.log('version: ', environment.app.version + ' (' + environment.app.env + ')');
+
+    window.addEventListener('resize', engine.resize.bind(engine));
+
+    this.scene = scene;
+    this.engine = engine;
+    this.loader = loader;
+  }
+
+  public startGame(): void {
+    const fps = document.getElementById('fps');
+    const drawCounter = document.getElementById('draw-counter');
+    const instrumentation = {
+      engine: new EngineInstrumentation(this.engine),
+      scene: new SceneInstrumentation(this.scene)
+    };
+    const inspector = new Inspector(this.scene, document.getElementById('inspector'));
+    const camera = new LevelCamera('LevelCamera', 16, this.scene);
+    const editor = new LevelEditor(camera, document.documentElement, this.scene);
+
+    this.engine.runRenderLoop(() => {
+      this.scene.render();
+      fps.innerHTML = ' fps: ' + this.engine.getFps().toFixed();
+      drawCounter.innerHTML = 'draw count: ' + instrumentation.scene.drawCallsCounter.current.toFixed();
+    });
+
+    this.loader.hide();
+  }
+
+  public stopGame(): void {
+    this.engine.stopRenderLoop();
+  }
 }
 
-async function main(): Promise<void> {
-  console.log('version: ', environment.app.version + ' (' + environment.app.env + ')');
+const main = new Main('scene');
 
-  const canvas = document.getElementById('scene') as HTMLCanvasElement;
-  const engine = new Engine(canvas, true);
-  const controlElement = document.documentElement;
-  const scene = new Scene(engine);
-  const camera = new LevelCamera('LevelCamera', 16, scene);
-  const editor = new LevelEditor(camera, controlElement, scene);
-  const loader = new Loader('loading');
-  const instrumentation = {
-    engine: new EngineInstrumentation(engine),
-    scene: new SceneInstrumentation(scene)
-  };
-
-  const fps = document.getElementById('fps');
-  const drawCounter = document.getElementById('draw-counter');
-  const inspector = new Inspector(scene, document.getElementById('inspector'));
-
-  engine.runRenderLoop(() => {
-    scene.render();
-    fps.innerHTML = ' fps: ' + engine.getFps().toFixed();
-    drawCounter.innerHTML = 'draw count: ' + instrumentation.scene.drawCallsCounter.current.toFixed();
-  });
-
-  window.addEventListener('resize', engine.resize.bind(engine));
-
-  loader.hide();
-
-  window.addEventListener('keydown', event => {
-    if (event.code === 'KeyL') {
-      if (loader.visible) {
-        loader.hide();
-      } else {
-        loader.show();
-      }
-    }
-  });
-}
-
-main();
+main.startGame();
