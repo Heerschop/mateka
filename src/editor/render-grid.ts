@@ -9,7 +9,7 @@ export class RenderGrid implements IDisposable {
   // private textMesh: Mesh;
   private utilityLayerRenderer: UtilityLayerRenderer;
 
-  constructor(readonly scene: Scene, readonly size = 100) {
+  public constructor(scene: Scene, size = 100) {
     this.utilityLayerRenderer = new UtilityLayerRenderer(scene, false);
 
     this.utilityLayerRenderer.utilityLayerScene.autoClearDepthAndStencil = false;
@@ -104,7 +104,7 @@ export class RenderGrid implements IDisposable {
 }
 
 class WorldAxis {
-  constructor(size: number, scene: Scene, glowLayer?: GlowLayer, readonly edgesWidth = 4.0) {
+  public constructor(size: number, scene: Scene, glowLayer?: GlowLayer, public readonly edgesWidth = 4.0) {
     const axisX = Mesh.CreateLines('axisX', [
       Vector3.Zero(), new Vector3(size, 0, 0), new Vector3(size * 0.95, 0.05 * size, 0),
       new Vector3(size, 0, 0), new Vector3(size * 0.95, -0.05 * size, 0)

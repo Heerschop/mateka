@@ -32,7 +32,7 @@ export class LevelCamera extends ArcRotateCamera {
     this.updateCameraOrtho();
   }
 
-  constructor(name: string, levelSize: number, scene: Scene, aspect = 1.75, scale = 1.00) {
+  public constructor(name: string, levelSize: number, scene: Scene, aspect = 1.75, scale = 1.00) {
     super(
       name,
       -Math.PI / 4, Math.PI / 3.4, levelSize * 30,
@@ -69,7 +69,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
   private noPreventDefault?: boolean;
   private element?: HTMLElement;
 
-  constructor(public readonly minScale: number, public readonly maxScale: number) {
+  public constructor(public readonly minScale: number, public readonly maxScale: number) {
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseAuxClick = this.onMouseAuxClick.bind(this);
     this.onMouseWheel = this.onMouseWheel.bind(this);

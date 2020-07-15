@@ -10,7 +10,7 @@ export class LevelEditor implements IDisposable {
     preventDefaultOnPointerUp: boolean
   };
 
-  constructor(camera: LevelCamera, private controlElement: HTMLElement, private readonly scene: Scene, gridSize: number = 100) {
+  public constructor(camera: LevelCamera, private controlElement: HTMLElement, private readonly scene: Scene, gridSize: number = 100) {
     this.renderGrid = new RenderGrid(scene, gridSize);
 
     this.default = {

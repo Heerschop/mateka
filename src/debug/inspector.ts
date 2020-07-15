@@ -5,7 +5,7 @@ export class Inspector {
     return this.scene.debugLayer.isVisible();
   }
 
-  constructor(private readonly scene: Scene, private readonly element: HTMLElement) {
+  public constructor(private readonly scene: Scene, private readonly element: HTMLElement) {
     window.addEventListener('keydown', (event) => {
       if (event.code === 'KeyI') {
         if (this.visible) {

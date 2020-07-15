@@ -6,7 +6,7 @@ export class Loader {
     return !!this.element;
   }
 
-  constructor(private readonly elementId: string) {
+  public constructor(private readonly elementId: string) {
     this.element = document.getElementById(this.elementId);
   }
 

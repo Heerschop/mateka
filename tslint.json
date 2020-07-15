@@ -65,7 +65,9 @@
     ],
     "member-access": [
       true,
-      "check-accessor"
+      "check-accessor",
+      "check-constructor",
+      "check-parameter-property"
     ],
     "no-console": [
       true,

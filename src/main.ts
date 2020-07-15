@@ -7,7 +7,7 @@ import { Inspector } from './debug/inspector';
 import { Loader } from './loader/loader';
 
 class Main {
-  constructor() {
+  public constructor() {
 
   }
 
