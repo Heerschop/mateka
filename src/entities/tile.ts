@@ -1,5 +1,17 @@
 import { Entity, EntityType, IEntityInstance } from '../entity-builder';
-import { Scene, Vector3, StandardMaterial, Material, Texture, Color3, MeshBuilder, Mesh, AbstractMesh, FresnelParameters, GlowLayer } from '@babylonjs/core';
+import {
+  Scene,
+  Vector3,
+  StandardMaterial,
+  Material,
+  Texture,
+  Color3,
+  MeshBuilder,
+  Mesh,
+  AbstractMesh,
+  FresnelParameters,
+  GlowLayer
+} from '@babylonjs/core';
 
 export class Tile extends Entity {
   private mesh?: Mesh;
@@ -21,7 +33,7 @@ export class Tile extends Entity {
       const size = {
         width: 1.0,
         height: 1.0,
-        depth: 1.0,
+        depth: 1.0
       };
       this.mesh = MeshBuilder.CreateBox(this.material, size, this.scene);
 
@@ -30,9 +42,7 @@ export class Tile extends Entity {
       instance = this.mesh;
 
       if (this.glowLayer) this.glowLayer.referenceMeshToUseItsOwnMaterial(instance);
-    }
-    else
-      instance = this.mesh.createInstance(this.material)
+    } else instance = this.mesh.createInstance(this.material);
     //this.mesh.removeInstance()
 
     instance.position = position;
@@ -43,7 +53,6 @@ export class Tile extends Entity {
   constructor(private readonly material: string, scene: Scene, private readonly glowLayer?: GlowLayer) {
     super(EntityType.Tile, scene);
   }
-
 
   private createMaterial(name: string): Material {
     const material = new StandardMaterial(name, this.scene);

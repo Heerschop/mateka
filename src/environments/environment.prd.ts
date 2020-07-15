@@ -1,4 +1,4 @@
-import { IEnvironment } from "./environment.model";
+import { IEnvironment } from './environment.model';
 import { version } from 'environments/../../package.json';
 
 export const environment: IEnvironment = {
@@ -7,6 +7,6 @@ export const environment: IEnvironment = {
     env: 'pwa-prd',
     get version() {
       return version;
-    },
+    }
   }
 };

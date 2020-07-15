@@ -50,6 +50,5 @@ export class Loader {
         this.element = null;
       }, timeout);
     }
-
   }
 }

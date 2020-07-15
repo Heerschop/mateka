@@ -6,12 +6,11 @@ export class Inspector {
   }
 
   public constructor(private readonly scene: Scene, private readonly element: HTMLElement) {
-    window.addEventListener('keydown', (event) => {
+    window.addEventListener('keydown', event => {
       if (event.code === 'KeyI') {
         if (this.visible) {
           this.hide();
-        }
-        else {
+        } else {
           this.show();
         }
       }
@@ -29,7 +28,7 @@ export class Inspector {
       this.scene.debugLayer.show({
         overlay: false,
         globalRoot: this.element,
-        embedMode: true,
+        embedMode: true
       });
     }
 

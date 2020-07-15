@@ -32,13 +32,8 @@ export class LevelCamera extends ArcRotateCamera {
     this.updateCameraOrtho();
   }
 
-  public constructor(name: string, levelSize: number, scene: Scene, aspect = 1.75, scale = 1.00) {
-    super(
-      name,
-      -Math.PI / 4, Math.PI / 3.4, levelSize * 30,
-      new Vector3(0, 0, 0),
-      scene,
-    );
+  public constructor(name: string, levelSize: number, scene: Scene, aspect = 1.75, scale = 1.0) {
+    super(name, -Math.PI / 4, Math.PI / 3.4, levelSize * 30, new Vector3(0, 0, 0), scene);
 
     this._size = levelSize;
     this._aspect = aspect;
@@ -65,7 +60,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
 
   public checkInputs?: () => void;
 
-  private defaults?: { scale: number, alpha: number, beta: number };
+  private defaults?: { scale: number; alpha: number; beta: number };
   private noPreventDefault?: boolean;
   private element?: HTMLElement;
 
@@ -85,8 +80,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     return 'mouse';
   }
 
-  public detachControl(element: HTMLElement): void {
-  }
+  public detachControl(element: HTMLElement): void {}
 
   public attachControl(element: HTMLElement, noPreventDefault?: boolean): void {
     if (!this.camera) throw new Error('No camera!');
@@ -94,7 +88,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
     this.defaults = {
       scale: this.camera.scale,
       alpha: this.camera.alpha,
-      beta: this.camera.beta,
+      beta: this.camera.beta
     };
 
     this.noPreventDefault = noPreventDefault;

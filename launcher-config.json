@@ -8,6 +8,12 @@
       "echo No lint errors found...",
       ""
     ],
-    "lint:write": "lint:check --fix"
+    "lint:write": "lint:check --fix",
+    "pretty:check": "prettier --check ./src/**/*.{js,ts,html,scss} $*",
+    "pretty:write": "prettier --write ./src/**/*.{js,ts,html,scss} $*",
+    "pre:commit": [
+      "pretty:check",
+      "lint:check"
+    ]
   }
 }

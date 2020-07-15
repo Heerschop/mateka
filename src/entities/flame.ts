@@ -1,24 +1,35 @@
-import { Entity, EntityType, IEntityInstance } from "../entity-builder";
-import { Vector3, Scene, ParticleSystem, Texture, Color3, Color4, GPUParticleSystem, IParticleSystem, BaseParticleSystem, Mesh } from '@babylonjs/core';
+import { Entity, EntityType, IEntityInstance } from '../entity-builder';
+import {
+  Vector3,
+  Scene,
+  ParticleSystem,
+  Texture,
+  Color3,
+  Color4,
+  GPUParticleSystem,
+  IParticleSystem,
+  BaseParticleSystem,
+  Mesh
+} from '@babylonjs/core';
 
 export class Flame extends Entity {
   enterEditMode(): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   leaveEditMode(): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   remove(instance: IEntityInstance): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   create(position: Vector3): IEntityInstance {
     // var particleSystem = new ParticleSystem("particles", 10000, this.scene);
     const particleSystem = this.createParticleSystem(true);
-    const emitter0 = Mesh.CreateBox("emitter0", 0.1, this.scene);
+    const emitter0 = Mesh.CreateBox('emitter0', 0.1, this.scene);
     emitter0.isVisible = false;
 
-    particleSystem.particleTexture = new Texture("https://www.babylonjs-playground.com/textures/fire.jpg", this.scene);
+    particleSystem.particleTexture = new Texture('https://www.babylonjs-playground.com/textures/fire.jpg', this.scene);
     particleSystem.blendMode = ParticleSystem.BLENDMODE_ONEONE;
 
     particleSystem.minAngularSpeed = -0.5;
@@ -47,13 +58,13 @@ export class Flame extends Entity {
     return {};
   }
 
-  constructor(scene: Scene) {
+  constructor(private readonly scene: Scene) {
     super(EntityType.Light, scene);
   }
 
   private createParticleSystem(useGPU: boolean): IParticleSystem & BaseParticleSystem {
     if (useGPU && GPUParticleSystem.IsSupported) {
-      const particleSystem = new GPUParticleSystem("particles", { capacity: 10000 }, this.scene);
+      const particleSystem = new GPUParticleSystem('particles', { capacity: 10000 }, this.scene);
 
       particleSystem.activeParticleCount = 768;
       particleSystem.manualEmitCount = particleSystem.activeParticleCount;
@@ -61,7 +72,7 @@ export class Flame extends Entity {
       return particleSystem;
     }
 
-    const particleSystem = new ParticleSystem("particles", 10000, this.scene);
+    const particleSystem = new ParticleSystem('particles', 10000, this.scene);
 
     particleSystem.manualEmitCount = particleSystem.getCapacity();
 

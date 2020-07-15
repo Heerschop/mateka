@@ -1,37 +1,52 @@
-import { Entity, EntityType, IEntityInstance } from "../entity-builder";
+import { Entity, EntityType, IEntityInstance } from '../entity-builder';
 import { Vector3, Scene, SpotLight, Animation, Color3, MeshBuilder } from '@babylonjs/core';
 
 export class Flashing extends Entity {
   enterEditMode(): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   leaveEditMode(): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
   remove(instance: IEntityInstance): void {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   create(position: Vector3): IEntityInstance {
     const size = {
       width: 0.4,
       height: 0.4,
-      depth: 0.4,
-
+      depth: 0.4
     };
     const light = new SpotLight('FlashingLight', position, new Vector3(1, 0, 0), Math.PI / 5, 2, this.scene);
-    const mesh = MeshBuilder.CreateCylinder('FlashingLight', {
-      diameterTop: 0,
-      diameterBottom: 0.4,
-      height: 1
-    }, this.scene);
+    const mesh = MeshBuilder.CreateCylinder(
+      'FlashingLight',
+      {
+        diameterTop: 0,
+        diameterBottom: 0.4,
+        height: 1
+      },
+      this.scene
+    );
 
     mesh.position = position;
     mesh.rotation.x = Math.PI / 2;
     mesh.rotation.y = -Math.PI / 2;
 
-    const lightAnimation = new Animation("FlashingAnimation", "direction.z", 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-    const boxAnimation = new Animation("BoxAnimation", "rotation.y", 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const lightAnimation = new Animation(
+      'FlashingAnimation',
+      'direction.z',
+      30,
+      Animation.ANIMATIONTYPE_FLOAT,
+      Animation.ANIMATIONLOOPMODE_CYCLE
+    );
+    const boxAnimation = new Animation(
+      'BoxAnimation',
+      'rotation.y',
+      30,
+      Animation.ANIMATIONTYPE_FLOAT,
+      Animation.ANIMATIONLOOPMODE_CYCLE
+    );
     //this.mesh.material = this.createMaterial(this.material);
 
     //instance = this.mesh;
@@ -55,8 +70,6 @@ export class Flashing extends Entity {
       }
     ]);
 
-
-
     lightAnimation.setKeys([
       {
         frame: 0,
@@ -75,7 +88,6 @@ export class Flashing extends Entity {
         value: light.direction.z
       }
     ]);
-
 
     light.animations.push(lightAnimation);
     mesh.animations.push(boxAnimation);

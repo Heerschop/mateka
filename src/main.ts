@@ -7,14 +7,9 @@ import { Inspector } from './debug/inspector';
 import { Loader } from './loader/loader';
 
 class Main {
-  public constructor() {
+  public constructor() {}
 
-  }
-
-  public runRenderLoop(): void {
-
-  }
-
+  public runRenderLoop(): void {}
 }
 
 async function main(): Promise<void> {
@@ -29,7 +24,7 @@ async function main(): Promise<void> {
   const loader = new Loader('loading');
   const instrumentation = {
     engine: new EngineInstrumentation(engine),
-    scene: new SceneInstrumentation(scene),
+    scene: new SceneInstrumentation(scene)
   };
 
   const fps = document.getElementById('fps');
@@ -46,17 +41,15 @@ async function main(): Promise<void> {
 
   loader.hide();
 
-  window.addEventListener('keydown', (event) => {
+  window.addEventListener('keydown', event => {
     if (event.code === 'KeyL') {
       if (loader.visible) {
         loader.hide();
-      }
-      else {
+      } else {
         loader.show();
       }
     }
   });
-
 }
 
 main();

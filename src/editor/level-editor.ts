@@ -1,16 +1,30 @@
 import { RenderGrid } from './render-grid';
-import { Color3, HighlightLayer, IDisposable, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
+import {
+  Color3,
+  HighlightLayer,
+  IDisposable,
+  Mesh,
+  MeshBuilder,
+  Scene,
+  StandardMaterial,
+  Vector3
+} from '@babylonjs/core';
 import { LevelCamera, LevelCameraInput } from '../level/level-camera';
 
 export class LevelEditor implements IDisposable {
   private cursor?: Mesh;
   private readonly renderGrid: RenderGrid;
   private readonly default: {
-    preventDefaultOnPointerDown: boolean
-    preventDefaultOnPointerUp: boolean
+    preventDefaultOnPointerDown: boolean;
+    preventDefaultOnPointerUp: boolean;
   };
 
-  public constructor(camera: LevelCamera, private controlElement: HTMLElement, private readonly scene: Scene, gridSize: number = 100) {
+  public constructor(
+    camera: LevelCamera,
+    private controlElement: HTMLElement,
+    private readonly scene: Scene,
+    gridSize: number = 100
+  ) {
     this.renderGrid = new RenderGrid(scene, gridSize);
 
     this.default = {
@@ -57,8 +71,8 @@ export class LevelEditor implements IDisposable {
       if (info && info.pickedPoint) {
         const position = info.pickedPoint;
 
-        position.x -= (position.x + 1000) % 1 - 0.5;
-        position.z -= (position.z + 1000) % 1 - 0.5;
+        position.x -= ((position.x + 1000) % 1) - 0.5;
+        position.z -= ((position.z + 1000) % 1) - 0.5;
         this.cursor.position = position;
       }
     }
@@ -74,16 +88,28 @@ export class LevelEditor implements IDisposable {
   }
 
   private createCursorMesh(): void {
-    const box = Mesh.CreateLines('box', [
-      new Vector3(-0.5, 0.0, -0.5), new Vector3(+0.5, 0.0, -0.5),
-      new Vector3(+0.5, 0.0, +0.5), new Vector3(-0.5, 0.0, +0.5),
-      new Vector3(-0.5, 0.0, -0.5), new Vector3(-0.5, 1.0, -0.5),
-      new Vector3(+0.5, 1.0, -0.5), new Vector3(+0.5, 0.0, -0.5),
-      new Vector3(+0.5, 1.0, -0.5), new Vector3(+0.5, 1.0, +0.5),
-      new Vector3(+0.5, 0.0, +0.5), new Vector3(+0.5, 1.0, +0.5),
-      new Vector3(-0.5, 1.0, +0.5), new Vector3(-0.5, 0.0, +0.5),
-      new Vector3(-0.5, 1.0, +0.5), new Vector3(-0.5, 1.0, -0.5),
-    ], this.renderGrid.utilityLayerScene);
+    const box = Mesh.CreateLines(
+      'box',
+      [
+        new Vector3(-0.5, 0.0, -0.5),
+        new Vector3(+0.5, 0.0, -0.5),
+        new Vector3(+0.5, 0.0, +0.5),
+        new Vector3(-0.5, 0.0, +0.5),
+        new Vector3(-0.5, 0.0, -0.5),
+        new Vector3(-0.5, 1.0, -0.5),
+        new Vector3(+0.5, 1.0, -0.5),
+        new Vector3(+0.5, 0.0, -0.5),
+        new Vector3(+0.5, 1.0, -0.5),
+        new Vector3(+0.5, 1.0, +0.5),
+        new Vector3(+0.5, 0.0, +0.5),
+        new Vector3(+0.5, 1.0, +0.5),
+        new Vector3(-0.5, 1.0, +0.5),
+        new Vector3(-0.5, 0.0, +0.5),
+        new Vector3(-0.5, 1.0, +0.5),
+        new Vector3(-0.5, 1.0, -0.5)
+      ],
+      this.renderGrid.utilityLayerScene
+    );
 
     box.enableEdgesRendering();
     box.edgesWidth = 2;
@@ -102,7 +128,7 @@ export class LevelEditor implements IDisposable {
   private createCursorMesh2(): void {
     const size = {
       width: 1,
-      height: 1,
+      height: 1
     };
 
     const scene = this.renderGrid.utilityLayerScene;
