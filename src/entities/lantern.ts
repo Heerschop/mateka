@@ -15,13 +15,7 @@ export class Lantern extends Entity {
   create(position: Vector3): IEntityInstance {
     const light = new SpotLight('Lantern', position, new Vector3(0, -1, 0), Math.PI / 1, 9, this.scene);
 
-    const animation1 = new Animation(
-      'LanternAnimation1',
-      'direction.x',
-      30,
-      Animation.ANIMATIONTYPE_FLOAT,
-      Animation.ANIMATIONLOOPMODE_CYCLE
-    );
+    const animation1 = new Animation('LanternAnimation1', 'direction.x', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
 
     animation1.setKeys([
       {
@@ -42,13 +36,7 @@ export class Lantern extends Entity {
       }
     ]);
 
-    const animation2 = new Animation(
-      'LanternAnimation2',
-      'direction.z',
-      30,
-      Animation.ANIMATIONTYPE_FLOAT,
-      Animation.ANIMATIONLOOPMODE_CYCLE
-    );
+    const animation2 = new Animation('LanternAnimation2', 'direction.z', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
 
     animation2.setKeys([
       {

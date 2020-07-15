@@ -1,16 +1,5 @@
 import { Entity, EntityType, IEntityInstance } from '../entity-builder';
-import {
-  Vector3,
-  Scene,
-  ParticleSystem,
-  Texture,
-  Color3,
-  Color4,
-  GPUParticleSystem,
-  IParticleSystem,
-  BaseParticleSystem,
-  Mesh
-} from '@babylonjs/core';
+import { Vector3, Scene, ParticleSystem, Texture, Color3, Color4, GPUParticleSystem, IParticleSystem, BaseParticleSystem, Mesh } from '@babylonjs/core';
 
 export class Flame extends Entity {
   enterEditMode(): void {

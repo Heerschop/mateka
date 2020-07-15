@@ -1,17 +1,5 @@
 import { Entity, EntityType, IEntityInstance } from '../entity-builder';
-import {
-  Scene,
-  Vector3,
-  StandardMaterial,
-  Material,
-  Texture,
-  Color3,
-  MeshBuilder,
-  Mesh,
-  AbstractMesh,
-  FresnelParameters,
-  GlowLayer
-} from '@babylonjs/core';
+import { Scene, Vector3, StandardMaterial, Material, Texture, Color3, MeshBuilder, Mesh, AbstractMesh, FresnelParameters, GlowLayer } from '@babylonjs/core';
 
 export class Tile extends Entity {
   private mesh?: Mesh;

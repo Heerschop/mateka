@@ -1,19 +1,4 @@
-import {
-  Camera,
-  Color3,
-  DynamicTexture,
-  GlowLayer,
-  IDisposable,
-  Mesh,
-  MeshBuilder,
-  Nullable,
-  PickingInfo,
-  Scene,
-  StandardMaterial,
-  Texture,
-  UtilityLayerRenderer,
-  Vector3
-} from '@babylonjs/core';
+import { Camera, Color3, DynamicTexture, GlowLayer, IDisposable, Mesh, MeshBuilder, Nullable, PickingInfo, Scene, StandardMaterial, Texture, UtilityLayerRenderer, Vector3 } from '@babylonjs/core';
 import { GridMaterial } from '@babylonjs/materials/grid';
 
 // https://github.com/BabylonJS/Babylon.js/blob/master/inspector/src/components/actionTabs/tabs/propertyGrids/renderGridPropertyGridComponent.tsx#L40
@@ -95,15 +80,7 @@ export class RenderGrid implements IDisposable {
     const texture = new DynamicTexture('DynamicTexture', textureSize, scene, true);
 
     texture.hasAlpha = true;
-    texture.drawText(
-      text,
-      0,
-      textureSize.height / 1.05,
-      'bold ' + textureSize.width / 1.5 + 'px Arial',
-      '#ffffff',
-      'transparent',
-      true
-    );
+    texture.drawText(text, 0, textureSize.height / 1.05, 'bold ' + textureSize.width / 1.5 + 'px Arial', '#ffffff', 'transparent', true);
 
     const material = new StandardMaterial('TextPlaneMaterial', scene);
 
@@ -129,13 +106,7 @@ class WorldAxis {
   public constructor(size: number, scene: Scene, glowLayer?: GlowLayer, public readonly edgesWidth = 4.0) {
     const axisX = Mesh.CreateLines(
       'axisX',
-      [
-        Vector3.Zero(),
-        new Vector3(size, 0, 0),
-        new Vector3(size * 0.95, 0.05 * size, 0),
-        new Vector3(size, 0, 0),
-        new Vector3(size * 0.95, -0.05 * size, 0)
-      ],
+      [Vector3.Zero(), new Vector3(size, 0, 0), new Vector3(size * 0.95, 0.05 * size, 0), new Vector3(size, 0, 0), new Vector3(size * 0.95, -0.05 * size, 0)],
       scene
     );
     axisX.enableEdgesRendering();
@@ -147,13 +118,7 @@ class WorldAxis {
 
     const axisY = Mesh.CreateLines(
       'axisY',
-      [
-        Vector3.Zero(),
-        new Vector3(0, size, 0),
-        new Vector3(-0.05 * size, size * 0.95, 0),
-        new Vector3(0, size, 0),
-        new Vector3(0.05 * size, size * 0.95, 0)
-      ],
+      [Vector3.Zero(), new Vector3(0, size, 0), new Vector3(-0.05 * size, size * 0.95, 0), new Vector3(0, size, 0), new Vector3(0.05 * size, size * 0.95, 0)],
       scene
     );
     axisY.enableEdgesRendering();
@@ -166,13 +131,7 @@ class WorldAxis {
 
     const axisZ = Mesh.CreateLines(
       'axisZ',
-      [
-        Vector3.Zero(),
-        new Vector3(0, 0, size),
-        new Vector3(0, -0.05 * size, size * 0.95),
-        new Vector3(0, 0, size),
-        new Vector3(0, 0.05 * size, size * 0.95)
-      ],
+      [Vector3.Zero(), new Vector3(0, 0, size), new Vector3(0, -0.05 * size, size * 0.95), new Vector3(0, 0, size), new Vector3(0, 0.05 * size, size * 0.95)],
       scene
     );
     axisZ.enableEdgesRendering();
@@ -182,21 +141,9 @@ class WorldAxis {
 
     if (glowLayer) glowLayer.referenceMeshToUseItsOwnMaterial(axisZ);
 
-    WorldAxis.createTextPlane(
-      new Vector3(-0.03, +0.9 * size, -0.03 * size),
-      'Y',
-      axisY.color,
-      size / 10,
-      scene
-    ).rotation.y += -Math.PI / 4;
+    WorldAxis.createTextPlane(new Vector3(-0.03, +0.9 * size, -0.03 * size), 'Y', axisY.color, size / 10, scene).rotation.y += -Math.PI / 4;
     WorldAxis.createTextPlane(new Vector3(+0.9 * size, +0.06 * size, +0.0), 'X', axisX.color, size / 10, scene);
-    WorldAxis.createTextPlane(
-      new Vector3(+0.0, +0.06 * size, +0.9 * size),
-      'Z',
-      axisZ.color,
-      size / 10,
-      scene
-    ).rotation.y += -Math.PI / 2;
+    WorldAxis.createTextPlane(new Vector3(+0.0, +0.06 * size, +0.9 * size), 'Z', axisZ.color, size / 10, scene).rotation.y += -Math.PI / 2;
   }
 
   private static createTextPlane(position: Vector3, text: string, color: Color3, size: number, scene: Scene): Mesh {

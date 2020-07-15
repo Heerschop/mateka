@@ -1,14 +1,5 @@
 import { RenderGrid } from './render-grid';
-import {
-  Color3,
-  HighlightLayer,
-  IDisposable,
-  Mesh,
-  MeshBuilder,
-  Scene,
-  StandardMaterial,
-  Vector3
-} from '@babylonjs/core';
+import { Color3, HighlightLayer, IDisposable, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
 import { LevelCamera, LevelCameraInput } from '../level/level-camera';
 
 export class LevelEditor implements IDisposable {
@@ -19,12 +10,7 @@ export class LevelEditor implements IDisposable {
     preventDefaultOnPointerUp: boolean;
   };
 
-  public constructor(
-    camera: LevelCamera,
-    private controlElement: HTMLElement,
-    private readonly scene: Scene,
-    gridSize: number = 100
-  ) {
+  public constructor(camera: LevelCamera, private controlElement: HTMLElement, private readonly scene: Scene, gridSize: number = 100) {
     this.renderGrid = new RenderGrid(scene, gridSize);
 
     this.default = {

@@ -33,20 +33,8 @@ export class Flashing extends Entity {
     mesh.rotation.x = Math.PI / 2;
     mesh.rotation.y = -Math.PI / 2;
 
-    const lightAnimation = new Animation(
-      'FlashingAnimation',
-      'direction.z',
-      30,
-      Animation.ANIMATIONTYPE_FLOAT,
-      Animation.ANIMATIONLOOPMODE_CYCLE
-    );
-    const boxAnimation = new Animation(
-      'BoxAnimation',
-      'rotation.y',
-      30,
-      Animation.ANIMATIONTYPE_FLOAT,
-      Animation.ANIMATIONLOOPMODE_CYCLE
-    );
+    const lightAnimation = new Animation('FlashingAnimation', 'direction.z', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const boxAnimation = new Animation('BoxAnimation', 'rotation.y', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
     //this.mesh.material = this.createMaterial(this.material);
 
     //instance = this.mesh;
