@@ -50,14 +50,6 @@ $aspectRatio: '16/9';
   margin: 4px;
 }
 
-.inspector {
-  position: absolute;
-  right: 0px;
-  width: auto;
-  height: 100%;
-  opacity: 0.8;
-}
-
 .loading-fade-out {
   animation: fade-out 1s;
   animation-fill-mode: forwards;
