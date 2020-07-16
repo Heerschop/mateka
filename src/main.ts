@@ -29,14 +29,14 @@ class Main {
   }
 
   public startGame(): void {
+    const camera = new LevelCamera('LevelCamera', 16, this.scene);
+    const editor = new LevelEditor(camera, document.documentElement, this.scene);
     const fps = document.getElementById('fps');
     const drawCounter = document.getElementById('draw-counter');
     const instrumentation = {
       engine: new EngineInstrumentation(this.engine),
       scene: new SceneInstrumentation(this.scene)
     };
-    const camera = new LevelCamera('LevelCamera', 16, this.scene);
-    const editor = new LevelEditor(camera, document.documentElement, this.scene);
 
     this.engine.runRenderLoop(() => {
       this.scene.render();
