@@ -1,4 +1,4 @@
-import { Vector3, Scene } from '@babylonjs/core';
+import { Scene, Vector3 } from '@babylonjs/core';
 
 export enum EntityType {
   Tile,
@@ -24,44 +24,46 @@ interface IRegisteredEntity {
   construct: EntityConstructor;
 }
 
-export interface IEntityInstance {}
+export interface IEntityInstance {
+  position: Vector3;
+}
 
 export abstract class Entity implements IEntity {
-  readonly instances: IEntityInstance[];
+  public readonly instances: IEntityInstance[];
 
-  constructor(public readonly type: EntityType, protected readonly scene: Scene) {
+  public constructor(public readonly type: EntityType, protected readonly scene: Scene) {
     this.instances = [];
   }
 
-  abstract enterEditMode(): void;
-  abstract leaveEditMode(): void;
+  public abstract enterEditMode(): void;
+  public abstract leaveEditMode(): void;
   // abstract enterGameMode(): void;
   // abstract leaveGameMode(): void;
 
-  abstract create(position: Vector3): IEntityInstance;
-  abstract remove(instance: IEntityInstance): void;
+  public abstract create(position: Vector3): IEntityInstance;
+  public abstract remove(instance: IEntityInstance): void;
 }
 
 export class EntityBuilder {
   private readonly entities: Map<string, IRegisteredEntity>;
 
-  constructor(private readonly scene: Scene) {
+  public constructor(private readonly scene: Scene) {
     this.entities = new Map();
   }
 
-  createEntity(id: string, position: Vector3): void {
+  public createEntity(id: string, position: Vector3): void {
     const registeredEntity = this.entities.get(id);
 
     if (registeredEntity) {
       if (!registeredEntity.entity) registeredEntity.entity = registeredEntity.construct(this.scene);
 
-      registeredEntity.entity.create(position);
+      registeredEntity.entity.create(position.add(new Vector3(0.5, 0.5, 0.5)));
     }
   }
 
-  removeEntity(position: Vector3): void {}
+  public removeEntity(position: Vector3): void {}
 
-  registerEntity(entities: { [id: string]: EntityConstructor }) {
+  public registerEntity(entities: { [id: string]: EntityConstructor }): void {
     for (const [id, constructor] of Object.entries(entities)) {
       this.entities.set(id, {
         entity: null,

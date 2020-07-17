@@ -1,18 +1,21 @@
-import { Entity, EntityType, IEntityInstance } from '../entity-builder';
-import { Vector3, Scene, ParticleSystem, Texture, Color3, Color4, GPUParticleSystem, IParticleSystem, BaseParticleSystem, Mesh } from '@babylonjs/core';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
+import { BaseParticleSystem, Color3, Color4, GPUParticleSystem, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 
 export class Flame extends Entity {
-  enterEditMode(): void {
+  public constructor(scene: Scene) {
+    super(EntityType.Light, scene);
+  }
+  public enterEditMode(): void {
     throw new Error('Method not implemented.');
   }
-  leaveEditMode(): void {
+  public leaveEditMode(): void {
     throw new Error('Method not implemented.');
   }
-  remove(instance: IEntityInstance): void {
+  public remove(instance: IEntityInstance): void {
     throw new Error('Method not implemented.');
   }
 
-  create(position: Vector3): IEntityInstance {
+  public create(position: Vector3): IEntityInstance {
     // var particleSystem = new ParticleSystem("particles", 10000, this.scene);
     const particleSystem = this.createParticleSystem(true);
     const emitter0 = Mesh.CreateBox('emitter0', 0.1, this.scene);
@@ -44,11 +47,7 @@ export class Flame extends Entity {
 
     particleSystem.start();
 
-    return {};
-  }
-
-  constructor(private readonly scene: Scene) {
-    super(EntityType.Light, scene);
+    return { position };
   }
 
   private createParticleSystem(useGPU: boolean): IParticleSystem & BaseParticleSystem {

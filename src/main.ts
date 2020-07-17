@@ -1,9 +1,11 @@
 import { environment } from './environments/environment';
-import { Engine, EngineInstrumentation, Scene, SceneInstrumentation } from '@babylonjs/core';
+import { Color3, Engine, EngineInstrumentation, HemisphericLight, Scene, SceneInstrumentation, Vector3 } from '@babylonjs/core';
 import { LevelEditor } from './editor/level-editor';
 import { LevelCamera } from './level/level-camera';
 import { Inspector } from './debug/inspector';
 import { Loader } from './loader/loader';
+import { LevelBuilder } from './level/level-builder';
+import { Flame, Flashing, Lantern, Tile } from 'entities';
 
 class Main {
   private readonly engine: Engine;
@@ -37,6 +39,36 @@ class Main {
       engine: new EngineInstrumentation(this.engine),
       scene: new SceneInstrumentation(this.scene)
     };
+    const builder = new LevelBuilder(this.scene);
+
+    builder.registerEntity({
+      0: scene => new Tile('ruin-tile-01', scene),
+      1: scene => new Tile('stylized-bush-01', scene),
+      2: scene => new Tile('stylized-floor-tile-01', scene),
+      3: scene => new Tile('stylized-ground-02', scene),
+      4: scene => new Tile('stylized-ground-rock-09', scene),
+      5: scene => new Tile('stylized-tree-bark-04', scene),
+      6: scene => new Tile('stylized-wall-rock-01', scene),
+      7: scene => new Tile('random-stone-tiles-02', scene),
+      8: scene => new Tile('broken-tiles-dry', scene),
+      9: scene => new Tile('abandon-brick-wall-03', scene),
+      A: scene => new Tile('stone-and-sand', scene),
+      B: scene => new Lantern(scene),
+      C: scene => new Flashing(scene),
+      D: scene => new Flame(scene)
+      // E: (scene) => new Tile('lava', scene, glowLayer),
+    });
+
+    builder.createEntity('0', new Vector3(0, 0, 0));
+    builder.createEntity('1', new Vector3(1, 0, 0));
+    builder.createEntity('D', new Vector3(2, 0, 0));
+
+    const light = new HemisphericLight('hemispher', new Vector3(0, 1, 0), this.scene);
+    light.intensity = 0.3;
+    // light.intensity = 0.55;
+    light.diffuse = new Color3(0.8, 0.3, 0.3);
+    light.specular = new Color3(0.0, 0.3, 0.0);
+    light.groundColor = new Color3(0.3, 0.8, 0.3);
 
     this.engine.runRenderLoop(() => {
       this.scene.render();

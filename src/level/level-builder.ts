@@ -1,5 +1,5 @@
 import { Scene, Vector3 } from '@babylonjs/core';
-import { EntityConstructor, EntityBuilder } from './entity-builder';
+import { EntityBuilder, EntityConstructor } from './entity-builder';
 
 interface IVector3 {
   x: number;
@@ -19,11 +19,11 @@ interface ISimpleLevel {
 export class LevelBuilder {
   private readonly entityBuilder: EntityBuilder;
 
-  constructor(readonly scene: Scene) {
+  public constructor(scene: Scene) {
     this.entityBuilder = new EntityBuilder(scene);
   }
 
-  async loadLevel(file: string): Promise<void> {
+  public async loadLevel(file: string): Promise<void> {
     const entities = await this.loadSimpleLevel(file);
 
     for (const entity of entities) {
@@ -31,7 +31,11 @@ export class LevelBuilder {
     }
   }
 
-  registerEntity(entities: { [id: string]: EntityConstructor }): void {
+  public createEntity(id: string, position: Vector3): void {
+    this.entityBuilder.createEntity(id, position);
+  }
+
+  public registerEntity(entities: { [id: string]: EntityConstructor }): void {
     this.entityBuilder.registerEntity(entities);
   }
 
@@ -63,6 +67,6 @@ export class LevelBuilder {
   private parsePosition(origin: string): Vector3 {
     const items = origin.split(',');
 
-    return new Vector3(+0.5 + Number.parseInt(items[0]), +0.5 + Number.parseInt(items[1]), +0.5 + Number.parseInt(items[2]));
+    return new Vector3(+0.5 + Number.parseInt(items[0], 10), +0.5 + Number.parseInt(items[1], 10), +0.5 + Number.parseInt(items[2], 10));
   }
 }

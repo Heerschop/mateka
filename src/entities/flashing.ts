@@ -1,18 +1,21 @@
-import { Entity, EntityType, IEntityInstance } from '../entity-builder';
-import { Vector3, Scene, SpotLight, Animation, Color3, MeshBuilder } from '@babylonjs/core';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
+import { Animation, Color3, MeshBuilder, Scene, SpotLight, Vector3 } from '@babylonjs/core';
 
 export class Flashing extends Entity {
-  enterEditMode(): void {
+  public constructor(scene: Scene) {
+    super(EntityType.Light, scene);
+  }
+  public enterEditMode(): void {
     throw new Error('Method not implemented.');
   }
-  leaveEditMode(): void {
+  public leaveEditMode(): void {
     throw new Error('Method not implemented.');
   }
-  remove(instance: IEntityInstance): void {
+  public remove(instance: IEntityInstance): void {
     throw new Error('Method not implemented.');
   }
 
-  create(position: Vector3): IEntityInstance {
+  public create(position: Vector3): IEntityInstance {
     const size = {
       width: 0.4,
       height: 0.4,
@@ -35,9 +38,9 @@ export class Flashing extends Entity {
 
     const lightAnimation = new Animation('FlashingAnimation', 'direction.z', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
     const boxAnimation = new Animation('BoxAnimation', 'rotation.y', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
-    //this.mesh.material = this.createMaterial(this.material);
+    // this.mesh.material = this.createMaterial(this.material);
 
-    //instance = this.mesh;
+    // instance = this.mesh;
 
     boxAnimation.setKeys([
       {
@@ -87,10 +90,6 @@ export class Flashing extends Entity {
     this.scene.beginAnimation(light, 0, 200, true);
     this.scene.beginAnimation(mesh, 0, 200, true);
 
-    return {};
-  }
-
-  constructor(scene: Scene) {
-    super(EntityType.Light, scene);
+    return { position };
   }
 }

@@ -1,18 +1,21 @@
-import { Entity, EntityType, IEntityInstance } from '../entity-builder';
-import { Vector3, Scene, SpotLight, Animation } from '@babylonjs/core';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
+import { Animation, Scene, SpotLight, Vector3 } from '@babylonjs/core';
 
 export class Lantern extends Entity {
-  enterEditMode(): void {
+  public constructor(scene: Scene) {
+    super(EntityType.Light, scene);
+  }
+  public enterEditMode(): void {
     throw new Error('Method not implemented.');
   }
-  leaveEditMode(): void {
+  public leaveEditMode(): void {
     throw new Error('Method not implemented.');
   }
-  remove(instance: IEntityInstance): void {
+  public remove(instance: IEntityInstance): void {
     throw new Error('Method not implemented.');
   }
 
-  create(position: Vector3): IEntityInstance {
+  public create(position: Vector3): IEntityInstance {
     const light = new SpotLight('Lantern', position, new Vector3(0, -1, 0), Math.PI / 1, 9, this.scene);
 
     const animation1 = new Animation('LanternAnimation1', 'direction.x', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
@@ -62,10 +65,6 @@ export class Lantern extends Entity {
 
     this.scene.beginAnimation(light, 0, 160, true);
 
-    return {};
-  }
-
-  constructor(scene: Scene) {
-    super(EntityType.Light, scene);
+    return { position };
   }
 }

@@ -1,20 +1,24 @@
-import { Entity, EntityType, IEntityInstance } from '../entity-builder';
-import { Scene, Vector3, StandardMaterial, Material, Texture, Color3, MeshBuilder, Mesh, AbstractMesh, FresnelParameters, GlowLayer } from '@babylonjs/core';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
+import { AbstractMesh, Color3, FresnelParameters, GlowLayer, Material, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from '@babylonjs/core';
 
 export class Tile extends Entity {
   private mesh?: Mesh;
 
-  enterEditMode(): void {
-    //throw new Error("Method not implemented.");
-  }
-  leaveEditMode(): void {
-    //throw new Error("Method not implemented.");
-  }
-  remove(instance: IEntityInstance): void {
-    //throw new Error("Method not implemented.");
+  public constructor(private readonly material: string, scene: Scene, private readonly glowLayer?: GlowLayer) {
+    super(EntityType.Tile, scene);
   }
 
-  create(position: Vector3): IEntityInstance {
+  public enterEditMode(): void {
+    // throw new Error("Method not implemented.");
+  }
+  public leaveEditMode(): void {
+    // throw new Error("Method not implemented.");
+  }
+  public remove(instance: IEntityInstance): void {
+    // throw new Error("Method not implemented.");
+  }
+
+  public create(position: Vector3): IEntityInstance {
     let instance: AbstractMesh;
 
     if (!this.mesh) {
@@ -31,25 +35,21 @@ export class Tile extends Entity {
 
       if (this.glowLayer) this.glowLayer.referenceMeshToUseItsOwnMaterial(instance);
     } else instance = this.mesh.createInstance(this.material);
-    //this.mesh.removeInstance()
+    // this.mesh.removeInstance()
 
     instance.position = position;
 
-    return {};
-  }
-
-  constructor(private readonly material: string, scene: Scene, private readonly glowLayer?: GlowLayer) {
-    super(EntityType.Tile, scene);
+    return { position };
   }
 
   private createMaterial(name: string): Material {
     const material = new StandardMaterial(name, this.scene);
 
-    material.diffuseTexture = new Texture('textures/tiles/' + name + '/' + name + '-diffuse.png', this.scene);
-    material.bumpTexture = new Texture('textures/tiles/' + name + '/' + name + '-normal.png', this.scene);
+    material.diffuseTexture = new Texture('assets/textures/' + name + '/' + name + '-diffuse.png', this.scene);
+    material.bumpTexture = new Texture('assets/textures/' + name + '/' + name + '-normal.png', this.scene);
 
     if (this.glowLayer) {
-      const texture = new Texture('textures/tiles/' + name + '/' + name + '-emissive.png', this.scene);
+      const texture = new Texture('assets/textures/' + name + '/' + name + '-emissive.png', this.scene);
 
       material.emissiveTexture = texture;
     }
