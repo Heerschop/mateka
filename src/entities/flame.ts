@@ -1,21 +1,29 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
-import { BaseParticleSystem, Color3, Color4, GPUParticleSystem, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
+import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 
 export class Flame extends Entity {
-  public constructor(scene: Scene) {
-    super(EntityType.Light, scene);
+  public constructor(private readonly scene: Scene, private readonly glowLayer?: GlowLayer) {
+    super(EntityType.Light);
   }
-  public enterEditMode(): void {
-    throw new Error('Method not implemented.');
+
+  public onEnterGame(instances: IEntityInstance[]): void {}
+
+  public onLeaveGame(instances: IEntityInstance[]): void {}
+
+  public onEnterEdit(instances: IEntityInstance[]): void {
+    for (const instance of instances) {
+      const box = Flame.createWireBox(this.scene, this.glowLayer);
+      box.position = instance.position;
+    }
   }
-  public leaveEditMode(): void {
-    throw new Error('Method not implemented.');
-  }
-  public remove(instance: IEntityInstance): void {
+
+  public onLeaveEdit(instances: IEntityInstance[]): void {}
+
+  public removeInstance(instance: IEntityInstance): void {
     throw new Error('Method not implemented.');
   }
 
-  public create(position: Vector3): IEntityInstance {
+  public createInstance(position: Vector3): IEntityInstance {
     // var particleSystem = new ParticleSystem("particles", 10000, this.scene);
     const particleSystem = this.createParticleSystem(true);
     const emitter0 = Mesh.CreateBox('emitter0', 0.1, this.scene);
@@ -48,6 +56,42 @@ export class Flame extends Entity {
     particleSystem.start();
 
     return { position };
+  }
+  private static createWireBox(scene: Scene, glowLayer?: GlowLayer): Mesh {
+    const box = Mesh.CreateLines(
+      'box',
+      [
+        new Vector3(-0.5, -0.5, -0.5),
+        new Vector3(+0.5, -0.5, -0.5),
+        new Vector3(+0.5, -0.5, +0.5),
+        new Vector3(-0.5, -0.5, +0.5),
+        new Vector3(-0.5, -0.5, -0.5),
+        new Vector3(-0.5, +0.5, -0.5),
+        new Vector3(+0.5, +0.5, -0.5),
+        new Vector3(+0.5, -0.5, -0.5),
+        new Vector3(+0.5, +0.5, -0.5),
+        new Vector3(+0.5, +0.5, +0.5),
+        new Vector3(+0.5, -0.5, +0.5),
+        new Vector3(+0.5, +0.5, +0.5),
+        new Vector3(-0.5, +0.5, +0.5),
+        new Vector3(-0.5, -0.5, +0.5),
+        new Vector3(-0.5, +0.5, +0.5),
+        new Vector3(-0.5, +0.5, -0.5)
+      ],
+      scene
+    );
+
+    box.enableEdgesRendering();
+    box.edgesWidth = 2;
+    box.color = new Color3(1, 1, 1);
+    box.edgesColor = box.color.toColor4();
+
+    if (glowLayer) glowLayer.referenceMeshToUseItsOwnMaterial(box);
+
+    const highlight = new HighlightLayer('hl1', scene);
+    highlight.addMesh(box, new Color3(1.0, 1.0, 1.0));
+
+    return box;
   }
 
   private createParticleSystem(useGPU: boolean): IParticleSystem & BaseParticleSystem {

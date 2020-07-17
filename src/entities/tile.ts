@@ -1,24 +1,42 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
 import { AbstractMesh, Color3, FresnelParameters, GlowLayer, Material, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from '@babylonjs/core';
 
+interface ITileInstance extends IEntityInstance {
+  mesh: AbstractMesh;
+}
 export class Tile extends Entity {
   private mesh?: Mesh;
 
-  public constructor(private readonly material: string, scene: Scene, private readonly glowLayer?: GlowLayer) {
-    super(EntityType.Tile, scene);
+  public constructor(private readonly material: string, private readonly scene: Scene, private readonly glowLayer?: GlowLayer) {
+    super(EntityType.Tile);
   }
 
-  public enterEditMode(): void {
-    // throw new Error("Method not implemented.");
-  }
-  public leaveEditMode(): void {
-    // throw new Error("Method not implemented.");
-  }
-  public remove(instance: IEntityInstance): void {
-    // throw new Error("Method not implemented.");
+  public onEnterGame(instances: IEntityInstance[]): void {}
+
+  public onLeaveGame(instances: IEntityInstance[]): void {}
+
+  public onEnterEdit(instances: IEntityInstance[]): void {
+    console.log('Tile:', instances);
   }
 
-  public create(position: Vector3): IEntityInstance {
+  public onLeaveEdit(instances: IEntityInstance[]): void {}
+
+  public removeInstance(instance: ITileInstance): void {
+    let instanceMesh = instance.mesh;
+
+    if (!instanceMesh.isAnInstance) {
+      const mesh = instanceMesh as Mesh;
+
+      if (mesh.instances.length > 1) {
+        instanceMesh = mesh.instances[0];
+        mesh.position = instanceMesh.position;
+      }
+    }
+
+    instanceMesh.dispose();
+  }
+
+  public createInstance(position: Vector3): ITileInstance {
     let instance: AbstractMesh;
 
     if (!this.mesh) {
@@ -34,12 +52,13 @@ export class Tile extends Entity {
       instance = this.mesh;
 
       if (this.glowLayer) this.glowLayer.referenceMeshToUseItsOwnMaterial(instance);
-    } else instance = this.mesh.createInstance(this.material);
-    // this.mesh.removeInstance()
+    } else {
+      instance = this.mesh.createInstance(this.material);
+    }
 
     instance.position = position;
 
-    return { position };
+    return { position, mesh: instance };
   }
 
   private createMaterial(name: string): Material {

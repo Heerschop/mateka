@@ -1,17 +1,19 @@
-import { environment } from './environments/environment';
+import { environment } from 'environments/environment';
 import { Color3, Engine, EngineInstrumentation, HemisphericLight, Scene, SceneInstrumentation, Vector3 } from '@babylonjs/core';
-import { LevelEditor } from './editor/level-editor';
-import { LevelCamera } from './level/level-camera';
-import { Inspector } from './debug/inspector';
-import { Loader } from './loader/loader';
-import { LevelBuilder } from './level/level-builder';
+import { LevelEditor } from 'editor/level-editor';
+import { LevelCamera } from 'level/level-camera';
+import { Inspector } from 'debug/inspector';
+import { Loader } from 'loader/loader';
+import { LevelBuilder } from 'level/level-builder';
 import { Flame, Flashing, Lantern, Tile } from 'entities';
+import { Menu } from 'menu/menu';
 
 class Main {
   private readonly engine: Engine;
   private readonly scene: Scene;
   private readonly loader: Loader;
   private readonly inspector: Inspector;
+  private readonly menu: Menu;
 
   public constructor(canvasId: string) {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -19,6 +21,7 @@ class Main {
     const scene = new Scene(engine);
     const loader = new Loader('loading');
     const inspector = new Inspector(scene);
+    const menu = new Menu();
 
     console.log('version: ', environment.app.version + ' (' + environment.app.env + ')');
 
@@ -28,6 +31,7 @@ class Main {
     this.engine = engine;
     this.loader = loader;
     this.inspector = inspector;
+    this.menu = menu;
   }
 
   public startGame(): void {
@@ -61,7 +65,10 @@ class Main {
 
     builder.createEntity('0', new Vector3(0, 0, 0));
     builder.createEntity('1', new Vector3(1, 0, 0));
+    builder.createEntity('1', new Vector3(1, 0, 1));
     builder.createEntity('D', new Vector3(2, 0, 0));
+
+    builder.entityManager.enterEdit();
 
     const light = new HemisphericLight('hemispher', new Vector3(0, 1, 0), this.scene);
     light.intensity = 0.3;
@@ -75,6 +82,8 @@ class Main {
       fps.innerHTML = ' fps: ' + this.engine.getFps().toFixed();
       drawCounter.innerHTML = 'draw count: ' + instrumentation.scene.drawCallsCounter.current.toFixed();
     });
+
+    this.menu.show();
 
     this.loader.hide();
   }

@@ -1,21 +1,28 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
 import { Animation, Color3, MeshBuilder, Scene, SpotLight, Vector3 } from '@babylonjs/core';
 
 export class Flashing extends Entity {
-  public constructor(scene: Scene) {
-    super(EntityType.Light, scene);
-  }
-  public enterEditMode(): void {
-    throw new Error('Method not implemented.');
-  }
-  public leaveEditMode(): void {
-    throw new Error('Method not implemented.');
-  }
-  public remove(instance: IEntityInstance): void {
-    throw new Error('Method not implemented.');
+  public constructor(private readonly scene: Scene) {
+    super(EntityType.Light);
   }
 
-  public create(position: Vector3): IEntityInstance {
+  public onEnterGame(instances: IEntityInstance[]): void {}
+
+  public onLeaveGame(instances: IEntityInstance[]): void {}
+
+  public onEnterEdit(instances: IEntityInstance[]): void {
+    // throw new Error('Method not implemented.');
+  }
+
+  public onLeaveEdit(instances: IEntityInstance[]): void {
+    // throw new Error('Method not implemented.');
+  }
+
+  public removeInstance(instance: IEntityInstance): void {
+    // throw new Error('Method not implemented.');
+  }
+
+  public createInstance(position: Vector3): IEntityInstance {
     const size = {
       width: 0.4,
       height: 0.4,

@@ -50,13 +50,13 @@ $aspectRatio: '16/9';
   margin: 4px;
 }
 
-.loading-fade-out {
+.content-fade-out {
   animation: fade-out 1s;
   animation-fill-mode: forwards;
   pointer-events: none;
 }
 
-.loading-fade-in {
+.content-fade-in {
   animation: fade-in 0.75s;
 }
 

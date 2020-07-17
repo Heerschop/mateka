@@ -21,7 +21,7 @@ export class Loader {
       </div>
     `;
 
-    element.className = 'loading-fade-in';
+    element.className = 'content-fade-in';
 
     document.body.appendChild(element);
 
@@ -43,7 +43,7 @@ export class Loader {
       setTimeout(() => {
         const element = this.element;
 
-        element.className = 'loading-fade-out';
+        element.className = 'content-fade-out';
 
         element.onanimationend = () => element.remove();
 

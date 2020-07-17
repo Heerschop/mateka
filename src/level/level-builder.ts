@@ -1,5 +1,5 @@
 import { Scene, Vector3 } from '@babylonjs/core';
-import { EntityBuilder, EntityConstructor } from './entity-builder';
+import { EntityConstructor, EntityManager } from './entity-manager';
 
 interface IVector3 {
   x: number;
@@ -17,26 +17,26 @@ interface ISimpleLevel {
 }
 
 export class LevelBuilder {
-  private readonly entityBuilder: EntityBuilder;
+  public readonly entityManager: EntityManager;
 
   public constructor(scene: Scene) {
-    this.entityBuilder = new EntityBuilder(scene);
+    this.entityManager = new EntityManager(scene);
   }
 
   public async loadLevel(file: string): Promise<void> {
     const entities = await this.loadSimpleLevel(file);
 
     for (const entity of entities) {
-      this.entityBuilder.createEntity(entity.id, entity.position);
+      this.entityManager.createEntity(entity.id, entity.position);
     }
   }
 
   public createEntity(id: string, position: Vector3): void {
-    this.entityBuilder.createEntity(id, position);
+    this.entityManager.createEntity(id, position);
   }
 
   public registerEntity(entities: { [id: string]: EntityConstructor }): void {
-    this.entityBuilder.registerEntity(entities);
+    this.entityManager.registerEntity(entities);
   }
 
   private async loadSimpleLevel(file: string): Promise<IEntityRef[]> {

@@ -1,21 +1,28 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-builder';
+import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
 import { Animation, Scene, SpotLight, Vector3 } from '@babylonjs/core';
 
 export class Lantern extends Entity {
-  public constructor(scene: Scene) {
-    super(EntityType.Light, scene);
-  }
-  public enterEditMode(): void {
-    throw new Error('Method not implemented.');
-  }
-  public leaveEditMode(): void {
-    throw new Error('Method not implemented.');
-  }
-  public remove(instance: IEntityInstance): void {
-    throw new Error('Method not implemented.');
+  public constructor(private readonly scene: Scene) {
+    super(EntityType.Light);
   }
 
-  public create(position: Vector3): IEntityInstance {
+  public onEnterGame(instances: IEntityInstance[]): void {}
+
+  public onLeaveGame(instances: IEntityInstance[]): void {}
+
+  public onEnterEdit(instances: IEntityInstance[]): void {
+    // throw new Error('Method not implemented.');
+  }
+
+  public onLeaveEdit(instances: IEntityInstance[]): void {
+    // throw new Error('Method not implemented.');
+  }
+
+  public removeInstance(instance: IEntityInstance): void {
+    // throw new Error('Method not implemented.');
+  }
+
+  public createInstance(position: Vector3): IEntityInstance {
     const light = new SpotLight('Lantern', position, new Vector3(0, -1, 0), Math.PI / 1, 9, this.scene);
 
     const animation1 = new Animation('LanternAnimation1', 'direction.x', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);

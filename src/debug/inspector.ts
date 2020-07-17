@@ -64,15 +64,15 @@ export class Inspector {
     const style = document.createElement('style');
     document.head.appendChild(style);
     style.sheet.insertRule(`
-    #inspector {
-      position: absolute;
-      right: 0px;
-      top: 0px;
-      width: auto;
-      height: 100%;
-      opacity: 0.8;
-      z-index: 8000;
-    }
+      #inspector {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        width: auto;
+        height: 100%;
+        opacity: 0.8;
+        z-index: 8000;
+      }
     `);
 
     return element;
