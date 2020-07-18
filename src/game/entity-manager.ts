@@ -6,6 +6,15 @@ export enum EntityType {
   Actor,
   Effect
 }
+
+export enum EventType {
+  EnterEdit,
+  LeaveEdit,
+  StartGame,
+  PauseGame,
+  ResetGame
+}
+
 export enum ManagerMode {
   Editing,
   InGame,
@@ -36,6 +45,9 @@ export interface IEntityInstance {
 
 export abstract class Entity implements IEntity {
   public constructor(public readonly type: EntityType) {}
+
+  // public abstract onEditEvent(type: EventType, instances: IEntityInstance[]): void;
+  // public abstract onGameEvent(type: EventType, instances: IEntityInstance[]): void;
 
   public abstract onEnterEdit(instances: IEntityInstance[]): void;
   public abstract onLeaveEdit(instances: IEntityInstance[]): void;

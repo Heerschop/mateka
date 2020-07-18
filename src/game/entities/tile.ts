@@ -1,4 +1,4 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
+import { Entity, EntityType, IEntityInstance } from '../entity-manager';
 import { AbstractMesh, Color3, FresnelParameters, GlowLayer, Material, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from '@babylonjs/core';
 
 interface ITileInstance extends IEntityInstance {

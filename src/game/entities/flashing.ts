@@ -1,4 +1,4 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
+import { Entity, EntityType, IEntityInstance } from '../entity-manager';
 import { Animation, Color3, MeshBuilder, Scene, SpotLight, Vector3 } from '@babylonjs/core';
 
 export class Flashing extends Entity {

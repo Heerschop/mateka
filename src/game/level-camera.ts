@@ -96,8 +96,17 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
 
     this.detachControl(element);
 
-    element.addEventListener('keydown', this.onKeyDown);
-    element.addEventListener('keyup', this.onKeyUp);
+    window.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener('keyup', this.onKeyUp);
+  }
+
+  public reset(): void {
+    if (!this.camera) throw new Error('No camera!');
+
+    this.camera.target = Vector3.Zero();
+    this.camera.scale = this.defaults.scale;
+    this.camera.alpha = this.defaults.alpha;
+    this.camera.beta = this.defaults.beta;
   }
 
   private onMouseMove(event: MouseEvent): void {
@@ -112,10 +121,7 @@ export class LevelCameraInput implements ICameraInput<ArcRotateCamera> {
 
   private onMouseAuxClick(event: MouseEvent): void {
     if (event.button === 1 && this.camera && this.defaults) {
-      this.camera.target = Vector3.Zero();
-      this.camera.scale = this.defaults.scale;
-      this.camera.alpha = this.defaults.alpha;
-      this.camera.beta = this.defaults.beta;
+      this.reset();
 
       if (this.noPreventDefault) event.preventDefault();
     }

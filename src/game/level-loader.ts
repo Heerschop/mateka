@@ -1,5 +1,4 @@
 import { Scene, Vector3 } from '@babylonjs/core';
-import { EntityConstructor, EntityManager } from './entity-manager';
 
 interface IVector3 {
   x: number;
@@ -16,30 +15,26 @@ interface ISimpleLevel {
   tiles: { [y: number]: string[] };
 }
 
-export class LevelBuilder {
-  public readonly entityManager: EntityManager;
+export class LevelLoader {
+  public constructor() {}
 
-  public constructor(scene: Scene) {
-    this.entityManager = new EntityManager(scene);
-  }
+  // public async loadLevel(file: string): Promise<void> {
+  //   const entities = await this.loadSimpleLevel(file);
 
-  public async loadLevel(file: string): Promise<void> {
-    const entities = await this.loadSimpleLevel(file);
+  //   for (const entity of entities) {
+  //     this.entityManager.createEntity(entity.id, entity.position);
+  //   }
+  // }
 
-    for (const entity of entities) {
-      this.entityManager.createEntity(entity.id, entity.position);
-    }
-  }
+  // public createEntity(id: string, position: Vector3): void {
+  //   this.entityManager.createEntity(id, position);
+  // }
 
-  public createEntity(id: string, position: Vector3): void {
-    this.entityManager.createEntity(id, position);
-  }
+  // public registerEntity(entities: { [id: string]: EntityConstructor }): void {
+  //   this.entityManager.registerEntity(entities);
+  // }
 
-  public registerEntity(entities: { [id: string]: EntityConstructor }): void {
-    this.entityManager.registerEntity(entities);
-  }
-
-  private async loadSimpleLevel(file: string): Promise<IEntityRef[]> {
+  public async loadLevel(file: string): Promise<IEntityRef[]> {
     const response = await fetch(file);
     const level = JSON.parse(await response.text()) as ISimpleLevel;
     const result: IEntityRef[] = [];

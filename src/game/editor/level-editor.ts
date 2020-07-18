@@ -1,19 +1,26 @@
 import { RenderGrid } from './render-grid';
 import { Color3, HighlightLayer, IDisposable, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
-import { LevelCamera, LevelCameraInput } from '../level/level-camera';
+import { LevelCamera, LevelCameraInput } from '../level-camera';
 
-export class LevelEditor implements IDisposable {
+export class LevelEditor {
   private cursor?: Mesh;
-  private readonly renderGrid: RenderGrid;
-  private readonly default: {
+  private renderGrid: RenderGrid;
+  private pointerDefaults: {
     preventDefaultOnPointerDown: boolean;
     preventDefaultOnPointerUp: boolean;
   };
 
-  public constructor(camera: LevelCamera, private controlElement: HTMLElement, private readonly scene: Scene, gridSize: number = 100) {
-    this.renderGrid = new RenderGrid(scene, gridSize);
+  public constructor(private controlElement: HTMLElement, private readonly scene: Scene, private readonly gridSize: number = 100) {
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseClick = this.onMouseClick.bind(this);
+  }
 
-    this.default = {
+  public enable(): void {
+    const scene = this.scene;
+
+    this.renderGrid = new RenderGrid(scene, this.gridSize);
+
+    this.pointerDefaults = {
       preventDefaultOnPointerDown: scene.preventDefaultOnPointerDown,
       preventDefaultOnPointerUp: scene.preventDefaultOnPointerUp
     };
@@ -21,17 +28,19 @@ export class LevelEditor implements IDisposable {
     scene.preventDefaultOnPointerDown = false;
     scene.preventDefaultOnPointerUp = false;
 
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseClick = this.onMouseClick.bind(this);
-
-    camera.attachControl(controlElement, false);
-
-    camera.inputs.add(new LevelCameraInput(camera.scale / 3, camera.scale * 105));
-
     this.enableCursor();
   }
 
-  public onMouseClick(event: MouseEvent): void {
+  public disable(): void {
+    this.disableCursor();
+
+    this.renderGrid.dispose();
+
+    this.scene.preventDefaultOnPointerDown = this.pointerDefaults.preventDefaultOnPointerDown;
+    this.scene.preventDefaultOnPointerUp = this.pointerDefaults.preventDefaultOnPointerUp;
+  }
+
+  private onMouseClick(event: MouseEvent): void {
     const info = this.scene.pick(event.offsetX, event.offsetY);
 
     if (info && info.hit && info.pickedMesh) {
@@ -50,27 +59,17 @@ export class LevelEditor implements IDisposable {
     }
   }
 
-  public onMouseMove(event: MouseEvent): void {
-    if (!event.shiftKey) {
-      const info = this.renderGrid.pick(event.offsetX, event.offsetY);
+  private onMouseMove(event: MouseEvent): void {
+    const info = this.renderGrid.pick(event.offsetX, event.offsetY);
 
-      if (info && info.pickedPoint) {
-        const position = info.pickedPoint;
+    if (info && info.pickedPoint) {
+      const position = info.pickedPoint;
 
-        position.x -= ((position.x + 1000) % 1) - 0.5;
-        position.z -= ((position.z + 1000) % 1) - 0.5;
-        this.cursor.position = position;
-      }
+      position.x -= ((position.x + 1000) % 1) - 0.5;
+      position.z -= ((position.z + 1000) % 1) - 0.5;
+
+      this.cursor.position = position;
     }
-  }
-
-  public dispose(): void {
-    this.disableCursor();
-
-    this.renderGrid.dispose();
-
-    this.scene.preventDefaultOnPointerDown = this.default.preventDefaultOnPointerDown;
-    this.scene.preventDefaultOnPointerUp = this.default.preventDefaultOnPointerUp;
   }
 
   private createCursorMesh(): void {

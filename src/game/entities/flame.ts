@@ -1,4 +1,4 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
+import { Entity, EntityType, IEntityInstance } from '../entity-manager';
 import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 
 export class Flame extends Entity {

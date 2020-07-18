@@ -3,7 +3,10 @@ import { Scene } from '@babylonjs/core';
 declare const require: (id: string) => any;
 
 export class Inspector {
+  public onshow: () => void = undefined;
+  public onhide: () => void = undefined;
   private inspectorLoaded = false;
+
   public get visible(): boolean {
     return this.inspectorLoaded && this.scene.debugLayer.isVisible();
   }
@@ -43,17 +46,27 @@ export class Inspector {
         globalRoot: this.element,
         embedMode: true
       });
+
+      if (this.onshow) {
+        this.onshow();
+      }
     }
 
     this.updateLocation(true);
   }
 
   public hide(): void {
-    this.scene.debugLayer.hide();
+    if (this.visible) {
+      if (this.onhide) {
+        this.onhide();
+      }
 
-    this.updateLocation(false);
+      this.scene.debugLayer.hide();
 
-    document.body.removeChild(this.element);
+      this.updateLocation(false);
+
+      document.body.removeChild(this.element);
+    }
   }
 
   private createInspectorElement(): HTMLElement {

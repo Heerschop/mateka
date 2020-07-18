@@ -1,4 +1,4 @@
-import { Entity, EntityType, IEntityInstance } from '../level/entity-manager';
+import { Entity, EntityType, IEntityInstance } from '../entity-manager';
 import { Animation, Scene, SpotLight, Vector3 } from '@babylonjs/core';
 
 export class Lantern extends Entity {
