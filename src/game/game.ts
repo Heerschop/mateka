@@ -1,4 +1,4 @@
-import { EntityManager } from './entity-manager';
+import { EntityManager, ManagerMode } from './entity-manager';
 import { LevelLoader } from './level-loader';
 import { Color3, GlowLayer, HemisphericLight, Scene, Vector3 } from '@babylonjs/core';
 import { LevelEditor } from './editor/level-editor';
@@ -10,7 +10,6 @@ export class Game {
   private readonly levelLoader: LevelLoader;
   private readonly levelEditor: LevelEditor;
   private readonly levelCamera: LevelCamera;
-  private readonly glowLayer: GlowLayer;
 
   public get camera(): LevelCamera {
     return this.levelCamera;
@@ -56,7 +55,7 @@ export class Game {
       B: scene => new Lantern(scene),
       C: scene => new Flashing(scene),
       D: scene => new Flame(scene),
-      E: scene => new Tile('lava', scene, this.glowLayer)
+      E: scene => new Tile('lava', scene, glowLayer)
     });
 
     // this.entityManager.createEntity('0', new Vector3(0, 0, 0));
@@ -79,9 +78,15 @@ export class Game {
     this.levelEditor.disable();
   }
 
-  public startGame(): void {}
+  public startGame(): void {
+    this.entityManager.startGame();
+  }
 
-  public pauseGame(): void {}
+  public pauseGame(): void {
+    this.entityManager.pauseGame();
+  }
 
-  public resetGame(): void {}
+  public resetGame(): void {
+    this.entityManager.resetGame();
+  }
 }

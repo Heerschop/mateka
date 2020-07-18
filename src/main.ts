@@ -18,14 +18,28 @@ async function main(canvasId: string): Promise<void> {
 
   window.addEventListener('resize', engine.resize.bind(engine));
 
+  menu.addEventListener('enteredit', event => {
+    game.enterEdit();
+  });
+  menu.addEventListener('leaveedit', event => {
+    game.leaveEdit();
+  });
+  menu.addEventListener('startgame', event => {
+    game.startGame();
+  });
+  menu.addEventListener('pausegame', event => {
+    game.pauseGame();
+  });
+  menu.addEventListener('resetgame', event => {
+    game.resetGame();
+  });
+
   const fps = document.getElementById('fps');
   const drawCounter = document.getElementById('draw-counter');
   const instrumentation = {
     engine: new EngineInstrumentation(engine),
     scene: new SceneInstrumentation(scene)
   };
-
-  game.enterEdit();
 
   engine.runRenderLoop(() => {
     scene.render();

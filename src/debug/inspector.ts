@@ -3,15 +3,16 @@ import { Scene } from '@babylonjs/core';
 declare const require: (id: string) => any;
 
 export class Inspector {
-  public onshow: () => void = undefined;
-  public onhide: () => void = undefined;
   private inspectorLoaded = false;
+  private readonly eventTarget: EventTarget;
 
   public get visible(): boolean {
     return this.inspectorLoaded && this.scene.debugLayer.isVisible();
   }
 
   public constructor(private readonly scene: Scene, hotKey = 'KeyI', private element: HTMLElement = null) {
+    this.eventTarget = new EventTarget();
+
     window.addEventListener('keydown', event => {
       if (event.code === hotKey) {
         if (this.visible) {
@@ -27,6 +28,10 @@ export class Inspector {
         this.show();
       }, 1000);
     }
+  }
+
+  public addEventListener(type: 'hide' | 'show', listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions): void {
+    this.eventTarget.addEventListener(type, listener, options);
   }
 
   public show(): void {
@@ -47,9 +52,7 @@ export class Inspector {
         embedMode: true
       });
 
-      if (this.onshow) {
-        this.onshow();
-      }
+      this.eventTarget.dispatchEvent(new Event('show'));
     }
 
     this.updateLocation(true);
@@ -57,9 +60,7 @@ export class Inspector {
 
   public hide(): void {
     if (this.visible) {
-      if (this.onhide) {
-        this.onhide();
-      }
+      this.eventTarget.dispatchEvent(new Event('hide'));
 
       this.scene.debugLayer.hide();
 

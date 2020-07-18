@@ -1,12 +1,16 @@
 export class Menu {
   private element: HTMLElement;
+  private readonly eventTarget: EventTarget;
 
   public get visible(): boolean {
     return !!this.element;
   }
 
   public constructor(hotKey = 'Escape', private readonly elementId: string = 'menu') {
+    let editMode = false;
+
     this.element = document.getElementById(this.elementId);
+    this.eventTarget = new EventTarget();
 
     window.addEventListener('keydown', event => {
       if (event.code === hotKey) {
@@ -16,7 +20,42 @@ export class Menu {
           this.show();
         }
       }
+
+      switch (event.code) {
+        case 'KeyE':
+          if (editMode) {
+            this.eventTarget.dispatchEvent(new Event('leaveedit'));
+          } else {
+            this.eventTarget.dispatchEvent(new Event('enteredit'));
+          }
+          editMode = !editMode;
+          break;
+        case 'KeyS':
+          this.eventTarget.dispatchEvent(new Event('startgame'));
+          break;
+        case 'KeyR':
+          this.eventTarget.dispatchEvent(new Event('resetgame'));
+          break;
+        case 'KeyP':
+          this.eventTarget.dispatchEvent(new Event('pausegame'));
+          break;
+      }
     });
+
+    const element = document.createElement('div');
+
+    element.innerHTML = `
+      <h2 style="position: absolute;bottom: 32px;left:32px">(E)dit&nbsp;&nbsp;&nbsp;(S)tart&nbsp;&nbsp;&nbsp;(R)eset&nbsp;&nbsp;&nbsp;(P)ause</h2>
+    `;
+    document.body.appendChild(element);
+  }
+
+  public addEventListener(
+    type: 'enteredit' | 'leaveedit' | 'startgame' | 'pausegame' | 'resetgame',
+    listener: EventListenerOrEventListenerObject | null,
+    options?: boolean | AddEventListenerOptions
+  ): void {
+    this.eventTarget.addEventListener(type, listener, options);
   }
 
   public show(): void {

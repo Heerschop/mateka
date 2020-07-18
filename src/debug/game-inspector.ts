@@ -9,16 +9,16 @@ export class GameInspector extends Inspector {
     const controlElement = scene.getEngine().getRenderingCanvas();
     let cameraInput: LevelCameraInput = null;
 
-    this.onshow = () => {
+    this.addEventListener('show', event => {
       if (!cameraInput) {
         cameraInput = new LevelCameraInput(camera.scale / 3, camera.scale * 105);
 
         camera.attachControl(controlElement, false);
         camera.inputs.add(cameraInput);
       }
-    };
+    });
 
-    this.onhide = () => {
+    this.addEventListener('hide', event => {
       if (cameraInput) {
         cameraInput.reset();
 
@@ -27,6 +27,6 @@ export class GameInspector extends Inspector {
 
         cameraInput = null;
       }
-    };
+    });
   }
 }

@@ -11,14 +11,11 @@ export class Tile extends Entity {
     super(EntityType.Tile);
   }
 
-  public onEnterGame(instances: IEntityInstance[]): void {}
+  public onStartGame(instances: IEntityInstance[]): void {}
+  public onPauseGame(instances: IEntityInstance[]): void {}
+  public onResetGame(instances: IEntityInstance[]): void {}
 
-  public onLeaveGame(instances: IEntityInstance[]): void {}
-
-  public onEnterEdit(instances: IEntityInstance[]): void {
-    console.log('Tile:', instances);
-  }
-
+  public onEnterEdit(instances: IEntityInstance[]): void {}
   public onLeaveEdit(instances: IEntityInstance[]): void {}
 
   public removeInstance(instance: ITileInstance): void {
@@ -51,7 +48,9 @@ export class Tile extends Entity {
 
       instance = this.mesh;
 
-      if (this.glowLayer) this.glowLayer.referenceMeshToUseItsOwnMaterial(instance);
+      if (this.glowLayer) {
+        this.glowLayer.referenceMeshToUseItsOwnMaterial(instance);
+      }
     } else {
       instance = this.mesh.createInstance(this.material);
     }

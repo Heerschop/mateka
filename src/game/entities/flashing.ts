@@ -6,21 +6,14 @@ export class Flashing extends Entity {
     super(EntityType.Light);
   }
 
-  public onEnterGame(instances: IEntityInstance[]): void {}
+  public onStartGame(instances: IEntityInstance[]): void {}
+  public onPauseGame(instances: IEntityInstance[]): void {}
+  public onResetGame(instances: IEntityInstance[]): void {}
 
-  public onLeaveGame(instances: IEntityInstance[]): void {}
+  public onEnterEdit(instances: IEntityInstance[]): void {}
+  public onLeaveEdit(instances: IEntityInstance[]): void {}
 
-  public onEnterEdit(instances: IEntityInstance[]): void {
-    // throw new Error('Method not implemented.');
-  }
-
-  public onLeaveEdit(instances: IEntityInstance[]): void {
-    // throw new Error('Method not implemented.');
-  }
-
-  public removeInstance(instance: IEntityInstance): void {
-    // throw new Error('Method not implemented.');
-  }
+  public removeInstance(instance: IEntityInstance): void {}
 
   public createInstance(position: Vector3): IEntityInstance {
     const size = {

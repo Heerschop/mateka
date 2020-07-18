@@ -7,18 +7,12 @@ export enum EntityType {
   Effect
 }
 
-export enum EventType {
+export enum ManagerMode {
   EnterEdit,
   LeaveEdit,
   StartGame,
   PauseGame,
   ResetGame
-}
-
-export enum ManagerMode {
-  Editing,
-  InGame,
-  Idle
 }
 
 export type EntityConstructor = (scene: Scene) => Entity;
@@ -46,13 +40,11 @@ export interface IEntityInstance {
 export abstract class Entity implements IEntity {
   public constructor(public readonly type: EntityType) {}
 
-  // public abstract onEditEvent(type: EventType, instances: IEntityInstance[]): void;
-  // public abstract onGameEvent(type: EventType, instances: IEntityInstance[]): void;
-
   public abstract onEnterEdit(instances: IEntityInstance[]): void;
   public abstract onLeaveEdit(instances: IEntityInstance[]): void;
-  public abstract onEnterGame(instances: IEntityInstance[]): void;
-  public abstract onLeaveGame(instances: IEntityInstance[]): void;
+  public abstract onStartGame(instances: IEntityInstance[]): void;
+  public abstract onPauseGame(instances: IEntityInstance[]): void;
+  public abstract onResetGame(instances: IEntityInstance[]): void;
 
   public abstract createInstance(position: Vector3): IEntityInstance;
   public abstract removeInstance(instance: IEntityInstance): void;
@@ -62,6 +54,13 @@ export class EntityManager {
   private readonly entities: Map<string, IRegisteredEntity>;
   private readonly offset = new Vector3(0.5, 0.5, 0.5);
   private _mode: ManagerMode;
+  private static readonly modes = new Map<ManagerMode, string>([
+    [ManagerMode.EnterEdit, 'onEnterEdit'],
+    [ManagerMode.LeaveEdit, 'onLeaveEdit'],
+    [ManagerMode.StartGame, 'onStartGame'],
+    [ManagerMode.PauseGame, 'onPauseGame'],
+    [ManagerMode.ResetGame, 'onResetGame']
+  ]);
 
   public get mode(): ManagerMode {
     return this._mode;
@@ -96,42 +95,40 @@ export class EntityManager {
   }
 
   public enterEdit(): void {
-    for (const registeredEntity of this.entities.values()) {
-      if (registeredEntity.instances.length > 0) {
-        registeredEntity.entity.onEnterEdit(registeredEntity.instances);
-      }
-    }
-
-    this._mode = ManagerMode.Editing;
+    this.setMode(ManagerMode.EnterEdit);
   }
 
   public leaveEdit(): void {
-    for (const registeredEntity of this.entities.values()) {
-      if (registeredEntity.instances.length > 0) {
-        registeredEntity.entity.onLeaveEdit(registeredEntity.instances);
-      }
-    }
-
-    this._mode = ManagerMode.Idle;
+    this.setMode(ManagerMode.LeaveEdit);
   }
 
-  public enterGame(): void {
-    for (const registeredEntity of this.entities.values()) {
-      if (registeredEntity.instances.length > 0) {
-        registeredEntity.entity.onEnterGame(registeredEntity.instances);
-      }
-    }
-
-    this._mode = ManagerMode.InGame;
+  public startGame(): void {
+    this.setMode(ManagerMode.StartGame);
   }
 
-  public leaveGame(): void {
-    for (const registeredEntity of this.entities.values()) {
-      if (registeredEntity.instances.length > 0) {
-        registeredEntity.entity.onLeaveGame(registeredEntity.instances);
-      }
+  public pauseGame(): void {
+    this.setMode(ManagerMode.PauseGame);
+  }
+
+  public resetGame(): void {
+    this.setMode(ManagerMode.ResetGame);
+  }
+
+  private setMode(value: ManagerMode): void {
+    const methodName = EntityManager.modes.get(value);
+
+    if (!methodName) {
+      throw new Error('Set mode error: mode "' + value + '" not supported.');
     }
 
-    this._mode = ManagerMode.Idle;
+    if (value !== this._mode) {
+      for (const registeredEntity of this.entities.values()) {
+        if (registeredEntity.instances.length > 0) {
+          registeredEntity.entity[methodName](registeredEntity.instances);
+        }
+      }
+
+      value = this._mode;
+    }
   }
 }

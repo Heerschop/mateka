@@ -1,29 +1,40 @@
 import { Entity, EntityType, IEntityInstance } from '../entity-manager';
 import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 
+interface IFlameInstance extends IEntityInstance {
+  editInstance?: Mesh;
+}
+
 export class Flame extends Entity {
   public constructor(private readonly scene: Scene, private readonly glowLayer?: GlowLayer) {
     super(EntityType.Light);
   }
 
-  public onEnterGame(instances: IEntityInstance[]): void {}
+  public onStartGame(instances: IFlameInstance[]): void {}
+  public onPauseGame(instances: IEntityInstance[]): void {}
+  public onResetGame(instances: IFlameInstance[]): void {}
 
-  public onLeaveGame(instances: IEntityInstance[]): void {}
-
-  public onEnterEdit(instances: IEntityInstance[]): void {
+  public onEnterEdit(instances: IFlameInstance[]): void {
     for (const instance of instances) {
       const box = Flame.createWireBox(this.scene, this.glowLayer);
       box.position = instance.position;
+
+      instance.editInstance = box;
     }
   }
 
-  public onLeaveEdit(instances: IEntityInstance[]): void {}
+  public onLeaveEdit(instances: IFlameInstance[]): void {
+    for (const instance of instances) {
+      instance.editInstance.dispose();
+      instance.editInstance = undefined;
+    }
+  }
 
-  public removeInstance(instance: IEntityInstance): void {
+  public removeInstance(instance: IFlameInstance): void {
     throw new Error('Method not implemented.');
   }
 
-  public createInstance(position: Vector3): IEntityInstance {
+  public createInstance(position: Vector3): IFlameInstance {
     // var particleSystem = new ParticleSystem("particles", 10000, this.scene);
     const particleSystem = this.createParticleSystem(true);
     const emitter0 = Mesh.CreateBox('emitter0', 0.1, this.scene);
