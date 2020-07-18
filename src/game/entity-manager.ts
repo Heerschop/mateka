@@ -51,9 +51,6 @@ export abstract class Entity implements IEntity {
 }
 
 export class EntityManager {
-  private readonly entities: Map<string, IRegisteredEntity>;
-  private readonly offset = new Vector3(0.5, 0.5, 0.5);
-  private _mode: ManagerMode;
   private static readonly modes = new Map<ManagerMode, string>([
     [ManagerMode.EnterEdit, 'onEnterEdit'],
     [ManagerMode.LeaveEdit, 'onLeaveEdit'],
@@ -61,6 +58,9 @@ export class EntityManager {
     [ManagerMode.PauseGame, 'onPauseGame'],
     [ManagerMode.ResetGame, 'onResetGame']
   ]);
+  private readonly entities: Map<string, IRegisteredEntity>;
+  private readonly offset = new Vector3(0.5, 0.5, 0.5);
+  private _mode: ManagerMode;
 
   public get mode(): ManagerMode {
     return this._mode;
