@@ -22,3 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
 ### Issues
 * [New "Solution Style" tsconfig.json file breaks the unused files in most Editors](https://github.com/angular/angular-cli/issues/18040)
 * [Issues with importing interfaces created with export interface in Angular and TypeScript 3.9.6](https://github.com/angular/angular-cli/issues/18170)
+
+### Resources
+* [TypeScript Do's and Don'ts](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html)
