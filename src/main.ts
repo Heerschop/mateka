@@ -4,6 +4,7 @@ import { GameInspector } from 'debug/game-inspector';
 import { Loader } from 'loader/loader';
 import { Menu } from 'menu/menu';
 import { Game } from 'game/game';
+import { testStuff } from 'test-stuff';
 
 async function main(canvasId: string): Promise<void> {
   const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -15,6 +16,7 @@ async function main(canvasId: string): Promise<void> {
   const inspector = new GameInspector(scene, game.camera);
 
   const promise = game.loadLevel('assets/levels/level-01.json');
+  // const promise = testStuff(scene);
 
   window.addEventListener('resize', engine.resize.bind(engine));
 

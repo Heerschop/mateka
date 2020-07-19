@@ -1,21 +1,43 @@
 import { Entity, EntityType, IEntityInstance } from '../entity-manager';
-import { Animation, Color3, MeshBuilder, Scene, SpotLight, Vector3 } from '@babylonjs/core';
+import { AbstractMesh, Animatable, Animation, Color3, MeshBuilder, Scene, SpotLight, Vector3 } from '@babylonjs/core';
+
+interface IFlashing extends IEntityInstance {
+  animatables: Animatable[];
+}
 
 export class Flashing extends Entity {
   public constructor(private readonly scene: Scene) {
     super(EntityType.Light);
   }
 
-  public onStartGame(instances: IEntityInstance[]): void {}
-  public onPauseGame(instances: IEntityInstance[]): void {}
-  public onResetGame(instances: IEntityInstance[]): void {}
+  public onStartGame(instances: IFlashing[]): void {
+    for (const instance of instances) {
+      for (const animatable of instance.animatables) {
+        animatable.restart();
+      }
+    }
+  }
+  public onPauseGame(instances: IFlashing[]): void {
+    for (const instance of instances) {
+      for (const animatable of instance.animatables) {
+        animatable.pause();
+      }
+    }
+  }
+  public onResetGame(instances: IFlashing[]): void {
+    for (const instance of instances) {
+      for (const animatable of instance.animatables) {
+        animatable.reset();
+      }
+    }
+  }
 
-  public onEnterEdit(instances: IEntityInstance[]): void {}
-  public onLeaveEdit(instances: IEntityInstance[]): void {}
+  public onEnterEdit(instances: IFlashing[]): void {}
+  public onLeaveEdit(instances: IFlashing[]): void {}
 
-  public removeInstance(instance: IEntityInstance): void {}
+  public removeInstance(instance: IFlashing): void {}
 
-  public createInstance(position: Vector3): IEntityInstance {
+  public createInstance(position: Vector3): IFlashing {
     const size = {
       width: 0.4,
       height: 0.4,
@@ -39,7 +61,6 @@ export class Flashing extends Entity {
     const lightAnimation = new Animation('FlashingAnimation', 'direction.z', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
     const boxAnimation = new Animation('BoxAnimation', 'rotation.y', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
     // this.mesh.material = this.createMaterial(this.material);
-
     // instance = this.mesh;
 
     boxAnimation.setKeys([
@@ -87,9 +108,10 @@ export class Flashing extends Entity {
     light.specular = new Color3(0.1, 0.1, 0.1);
     light.intensity = 2;
 
-    this.scene.beginAnimation(light, 0, 200, true);
-    this.scene.beginAnimation(mesh, 0, 200, true);
+    const animatables = [this.scene.beginAnimation(light, 0, 200, true), this.scene.beginAnimation(mesh, 0, 200, true)];
 
-    return { position };
+    animatables.forEach(animatable => animatable.pause());
+
+    return { position, animatables };
   }
 }

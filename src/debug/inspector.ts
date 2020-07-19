@@ -14,7 +14,9 @@ export class Inspector {
     this.eventTarget = new EventTarget();
 
     window.addEventListener('keydown', event => {
-      if (event.code === hotKey) {
+      const target = event.target as HTMLElement;
+
+      if (target.nodeName !== 'INPUT' && event.code === hotKey) {
         if (this.visible) {
           this.hide();
         } else {

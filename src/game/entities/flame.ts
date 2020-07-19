@@ -1,8 +1,10 @@
 import { Entity, EntityType, IEntityInstance } from '../entity-manager';
 import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
+import { EntityBuilder } from 'game/editor/entity-builder';
 
 interface IFlameInstance extends IEntityInstance {
   editInstance?: Mesh;
+  particleSystem: IParticleSystem;
 }
 
 export class Flame extends Entity {
@@ -10,13 +12,28 @@ export class Flame extends Entity {
     super(EntityType.Light);
   }
 
-  public onStartGame(instances: IFlameInstance[]): void {}
-  public onPauseGame(instances: IEntityInstance[]): void {}
-  public onResetGame(instances: IFlameInstance[]): void {}
+  public onStartGame(instances: IFlameInstance[]): void {
+    for (const instance of instances) {
+      instance.particleSystem.updateSpeed = 0.01;
+      instance.particleSystem.start();
+    }
+  }
+  public onPauseGame(instances: IFlameInstance[]): void {
+    for (const instance of instances) {
+      instance.particleSystem.updateSpeed = 0;
+    }
+  }
+
+  public onResetGame(instances: IFlameInstance[]): void {
+    for (const instance of instances) {
+      instance.particleSystem.reset();
+    }
+  }
 
   public onEnterEdit(instances: IFlameInstance[]): void {
     for (const instance of instances) {
-      const box = Flame.createWireBox(this.scene, this.glowLayer);
+      const box = EntityBuilder.createBox('FlameWire');
+
       box.position = instance.position;
 
       instance.editInstance = box;
@@ -64,45 +81,7 @@ export class Flame extends Entity {
 
     particleSystem.gravity = new Vector3(0, -2.0, 0);
 
-    particleSystem.start();
-
-    return { position };
-  }
-  private static createWireBox(scene: Scene, glowLayer?: GlowLayer): Mesh {
-    const box = Mesh.CreateLines(
-      'box',
-      [
-        new Vector3(-0.5, -0.5, -0.5),
-        new Vector3(+0.5, -0.5, -0.5),
-        new Vector3(+0.5, -0.5, +0.5),
-        new Vector3(-0.5, -0.5, +0.5),
-        new Vector3(-0.5, -0.5, -0.5),
-        new Vector3(-0.5, +0.5, -0.5),
-        new Vector3(+0.5, +0.5, -0.5),
-        new Vector3(+0.5, -0.5, -0.5),
-        new Vector3(+0.5, +0.5, -0.5),
-        new Vector3(+0.5, +0.5, +0.5),
-        new Vector3(+0.5, -0.5, +0.5),
-        new Vector3(+0.5, +0.5, +0.5),
-        new Vector3(-0.5, +0.5, +0.5),
-        new Vector3(-0.5, -0.5, +0.5),
-        new Vector3(-0.5, +0.5, +0.5),
-        new Vector3(-0.5, +0.5, -0.5)
-      ],
-      scene
-    );
-
-    box.enableEdgesRendering();
-    box.edgesWidth = 2;
-    box.color = new Color3(1, 1, 1);
-    box.edgesColor = box.color.toColor4();
-
-    if (glowLayer) glowLayer.referenceMeshToUseItsOwnMaterial(box);
-
-    const highlight = new HighlightLayer('hl1', scene);
-    highlight.addMesh(box, new Color3(1.0, 1.0, 1.0));
-
-    return box;
+    return { position, particleSystem };
   }
 
   private createParticleSystem(useGPU: boolean): IParticleSystem & BaseParticleSystem {
