@@ -1,5 +1,5 @@
 # Mateka Online
-Isometric puzzle game running in the browser.
+Isometric puzzle game running in the browser. It's not a game yes :-)
 
 ![Mateka-readme](https://firebasestorage.googleapis.com/v0/b/mateka-online.appspot.com/o/images%2Fmateka-readme.png?alt=media)
 
