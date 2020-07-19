@@ -62,6 +62,6 @@ export class LevelLoader {
   private parsePosition(origin: string): Vector3 {
     const items = origin.split(',');
 
-    return new Vector3(+0.5 + Number.parseInt(items[0], 10), +0.5 + Number.parseInt(items[1], 10), +0.5 + Number.parseInt(items[2], 10));
+    return new Vector3(Number.parseInt(items[0], 10), Number.parseInt(items[1], 10), Number.parseInt(items[2], 10));
   }
 }

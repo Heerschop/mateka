@@ -7,16 +7,6 @@ export class Lantern extends Entity {
     super(EntityType.Light);
   }
 
-  public onStartGame(instances: IEntityInstance[]): void {
-    this.animatables.restart();
-  }
-  public onPauseGame(instances: IEntityInstance[]): void {
-    this.animatables.pause();
-  }
-  public onResetGame(instances: IEntityInstance[]): void {
-    this.animatables.reset();
-  }
-
   public onEnterEdit(instances: IEntityInstance[]): void {
     for (const instance of instances) {
       const cone = EntityBuilder.createCone('LanternWireCone', {
@@ -82,15 +72,6 @@ export class Lantern extends Entity {
 
       this.scene.beginAnimation(cone, 0, 160, true);
     }
-  }
-
-  public onLeaveEdit(instances: IEntityInstance[]): void {
-    this.editables.dispose();
-
-    // for (const instance of instances) {
-    //   instance.editInstance.dispose();
-    //   instance.editInstance = undefined;
-    // }
   }
 
   public removeInstance(instance: IEntityInstance): void {}

@@ -1,5 +1,5 @@
 import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
-import { AbstractMesh, Color3, FresnelParameters, GlowLayer, Material, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from '@babylonjs/core';
+import { AbstractMesh, Color3, GlowLayer, Material, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from '@babylonjs/core';
 
 interface ITileInstance extends IEntityInstance {
   mesh: AbstractMesh;
@@ -11,12 +11,7 @@ export class Tile extends Entity {
     super(EntityType.Tile);
   }
 
-  public onStartGame(instances: IEntityInstance[]): void {}
-  public onPauseGame(instances: IEntityInstance[]): void {}
-  public onResetGame(instances: IEntityInstance[]): void {}
-
   public onEnterEdit(instances: IEntityInstance[]): void {}
-  public onLeaveEdit(instances: IEntityInstance[]): void {}
 
   public removeInstance(instance: ITileInstance): void {
     let instanceMesh = instance.mesh;

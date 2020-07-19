@@ -2,57 +2,14 @@ import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
 import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 import { EntityBuilder } from 'game/editor/entity-builder';
 
-interface IFlameInstance extends IEntityInstance {
-  editInstance?: Mesh;
-  particleSystem: IParticleSystem;
-}
-
 export class Flame extends Entity {
   public constructor(private readonly scene: Scene, private readonly glowLayer?: GlowLayer) {
     super(EntityType.Light);
   }
 
-  public onStartGame(instances: IFlameInstance[]): void {
-    for (const instance of instances) {
-      instance.particleSystem.updateSpeed = 0.01;
-      instance.particleSystem.start();
-    }
-  }
-  public onPauseGame(instances: IFlameInstance[]): void {
-    for (const instance of instances) {
-      instance.particleSystem.updateSpeed = 0;
-    }
-  }
+  public removeInstance(instance: IEntityInstance): void {}
 
-  public onResetGame(instances: IFlameInstance[]): void {
-    for (const instance of instances) {
-      instance.particleSystem.reset();
-    }
-  }
-
-  public onEnterEdit(instances: IFlameInstance[]): void {
-    for (const instance of instances) {
-      const box = EntityBuilder.createBox('FlameWire');
-
-      box.position = instance.position;
-
-      instance.editInstance = box;
-    }
-  }
-
-  public onLeaveEdit(instances: IFlameInstance[]): void {
-    for (const instance of instances) {
-      instance.editInstance.dispose();
-      instance.editInstance = undefined;
-    }
-  }
-
-  public removeInstance(instance: IFlameInstance): void {
-    throw new Error('Method not implemented.');
-  }
-
-  public createInstance(position: Vector3): IFlameInstance {
-    // var particleSystem = new ParticleSystem("particles", 10000, this.scene);
+  public createInstance(position: Vector3): IEntityInstance {
     const particleSystem = this.createParticleSystem(true);
     const emitter0 = Mesh.CreateBox('emitter0', 0.1, this.scene);
     emitter0.isVisible = false;
@@ -80,8 +37,11 @@ export class Flame extends Entity {
     particleSystem.direction2 = new Vector3(1, 1, 1);
 
     particleSystem.gravity = new Vector3(0, -2.0, 0);
+    particleSystem.updateSpeed = 0.01;
 
-    return { position, particleSystem };
+    this.particles.push(particleSystem);
+
+    return { position };
   }
 
   private createParticleSystem(useGPU: boolean): IParticleSystem & BaseParticleSystem {

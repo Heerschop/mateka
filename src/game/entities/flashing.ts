@@ -7,19 +7,6 @@ export class Flashing extends Entity {
     super(EntityType.Light);
   }
 
-  public onStartGame(instances: IEntityInstance[]): void {
-    this.animatables.restart();
-  }
-  public onPauseGame(instances: IEntityInstance[]): void {
-    this.animatables.pause();
-  }
-  public onResetGame(instances: IEntityInstance[]): void {
-    this.animatables.reset();
-  }
-
-  public onEnterEdit(instances: IEntityInstance[]): void {}
-  public onLeaveEdit(instances: IEntityInstance[]): void {}
-
   public removeInstance(instance: IEntityInstance): void {}
 
   public createInstance(position: Vector3): IEntityInstance {

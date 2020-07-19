@@ -1,5 +1,5 @@
 import { environment } from 'environments/environment';
-import { Engine, EngineInstrumentation, Scene, SceneInstrumentation } from '@babylonjs/core';
+import { Color4, Engine, EngineInstrumentation, Scene, SceneInstrumentation } from '@babylonjs/core';
 import { GameInspector } from 'debug/game-inspector';
 import { Loader } from 'loader/loader';
 import { Menu } from 'menu/menu';
@@ -14,6 +14,8 @@ async function main(canvasId: string): Promise<void> {
   const menu = new Menu();
   const game = new Game(scene);
   const inspector = new GameInspector(scene, game.camera);
+
+  scene.clearColor = new Color4(0.1, 0.1, 0.1, 1);
 
   const promise = game.loadLevel('assets/levels/level-01.json');
   // const promise = testStuff(scene);

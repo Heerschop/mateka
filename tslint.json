@@ -163,7 +163,7 @@
     "no-shadowed-variable": false,
     "max-classes-per-file": [
       true,
-      3
+      5
     ],
     "no-consecutive-blank-lines": true,
     "no-unused-expression": [

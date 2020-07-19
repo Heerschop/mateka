@@ -8,7 +8,7 @@ export class WireBuilder {
       width?: number;
       height?: number;
       depth?: number;
-    },
+    } = {},
     scene?: Nullable<Scene>
   ): LinesMesh {
     const size = options.size ? options.size : 1;

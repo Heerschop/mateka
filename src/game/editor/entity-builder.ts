@@ -14,7 +14,7 @@ export class EntityBuilder {
     const mesh = MeshBuilder.CreateBox(name, options, scene);
 
     mesh.enableEdgesRendering();
-    mesh.edgesWidth = 4;
+    mesh.edgesWidth = 2;
     mesh.edgesColor = new Color4(1, 1, 1, 1);
     mesh.visibility = 0.7;
 
@@ -37,8 +37,7 @@ export class EntityBuilder {
       diameterBottom: diameter
     });
 
-    // mesh.enableEdgesRendering(1 - 0.01);
-    mesh.enableEdgesRendering();
+    mesh.enableEdgesRendering(); // 1 - 0.01
     mesh.edgesWidth = 4;
     mesh.edgesColor = new Color4(1, 1, 1, 1);
     mesh.visibility = 0.7;
