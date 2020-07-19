@@ -80,10 +80,12 @@ export class Game {
 
   public startGame(): void {
     this.entityManager.startGame();
+    // this.scene.animationsEnabled = true;
   }
 
   public pauseGame(): void {
     this.entityManager.pauseGame();
+    // this.scene.animationsEnabled = false;
   }
 
   public resetGame(): void {

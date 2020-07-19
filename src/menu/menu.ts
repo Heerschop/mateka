@@ -8,6 +8,7 @@ export class Menu {
 
   public constructor(hotKey = 'Escape', private readonly elementId: string = 'menu') {
     let editMode = false;
+    let pausegame = true;
 
     this.element = document.getElementById(this.elementId);
     this.eventTarget = new EventTarget();
@@ -32,12 +33,18 @@ export class Menu {
           break;
         case 'KeyS':
           this.eventTarget.dispatchEvent(new Event('startgame'));
+          pausegame = false;
           break;
         case 'KeyR':
           this.eventTarget.dispatchEvent(new Event('resetgame'));
           break;
         case 'KeyP':
-          this.eventTarget.dispatchEvent(new Event('pausegame'));
+          if (pausegame) {
+            this.eventTarget.dispatchEvent(new Event('startgame'));
+          } else {
+            this.eventTarget.dispatchEvent(new Event('pausegame'));
+          }
+          pausegame = !pausegame;
           break;
       }
     });
