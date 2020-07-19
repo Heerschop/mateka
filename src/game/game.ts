@@ -1,9 +1,9 @@
-import { EntityManager, ManagerMode } from './entity-manager';
-import { LevelLoader } from './level-loader';
+import { EntityManager, ManagerMode } from 'game/entity-manager';
+import { LevelLoader } from 'game/level-loader';
 import { Color3, GlowLayer, HemisphericLight, Scene, Vector3 } from '@babylonjs/core';
-import { LevelEditor } from './editor/level-editor';
-import { LevelCamera } from './level-camera';
-import { Flame, Flashing, Lantern, Tile } from './entities';
+import { LevelEditor } from 'game/editor/level-editor';
+import { LevelCamera } from 'game/level-camera';
+import { Flame, Flashing, Lantern, Tile } from 'game/entities';
 
 export class Game {
   private readonly entityManager: EntityManager;

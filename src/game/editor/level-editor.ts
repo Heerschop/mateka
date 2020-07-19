@@ -1,6 +1,5 @@
 import { RenderGrid } from './render-grid';
 import { Color3, HighlightLayer, IDisposable, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
-import { LevelCamera, LevelCameraInput } from '../level-camera';
 
 export class LevelEditor {
   private cursor?: Mesh;

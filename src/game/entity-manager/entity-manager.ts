@@ -1,11 +1,5 @@
-import { Scene, Vector3 } from '@babylonjs/core';
-
-export enum EntityType {
-  Tile,
-  Light,
-  Actor,
-  Effect
-}
+import { AbstractMesh, Animatable, Scene, Vector3 } from '@babylonjs/core';
+import { Entity } from './entity';
 
 export enum ManagerMode {
   EnterEdit,
@@ -17,16 +11,6 @@ export enum ManagerMode {
 
 export type EntityConstructor = (scene: Scene) => Entity;
 
-interface IEntity {
-  readonly type: EntityType;
-
-  // create(position: Vector3): IEntityInstance;
-  // remove(instance: IEntityInstance): void;
-
-  // enterEditMode(): void;
-  // leaveEditMode(): void;
-}
-
 interface IRegisteredEntity {
   entity: Entity | null;
   instances: IEntityInstance[];
@@ -35,19 +19,6 @@ interface IRegisteredEntity {
 
 export interface IEntityInstance {
   position: Vector3;
-}
-
-export abstract class Entity implements IEntity {
-  public constructor(public readonly type: EntityType) {}
-
-  public abstract onEnterEdit(instances: IEntityInstance[]): void;
-  public abstract onLeaveEdit(instances: IEntityInstance[]): void;
-  public abstract onStartGame(instances: IEntityInstance[]): void;
-  public abstract onPauseGame(instances: IEntityInstance[]): void;
-  public abstract onResetGame(instances: IEntityInstance[]): void;
-
-  public abstract createInstance(position: Vector3): IEntityInstance;
-  public abstract removeInstance(instance: IEntityInstance): void;
 }
 
 export class EntityManager {

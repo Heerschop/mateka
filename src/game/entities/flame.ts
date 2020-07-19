@@ -1,4 +1,4 @@
-import { Entity, EntityType, IEntityInstance } from '../entity-manager';
+import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
 import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 import { EntityBuilder } from 'game/editor/entity-builder';
 
