@@ -12,7 +12,16 @@
       "prd:Builds your app for the production environment.": "build:prd"
     },
     "tools": {
-      "lint:Lint TypeScript files": "lint"
+      "Code style": {
+        "check:Check files": [
+          "lint:check || true",
+          "pretty:check || true"
+        ],
+        "write:Update files": [
+          "lint:write",
+          "pretty:write"
+        ]
+      }
     }
   },
   "options": {

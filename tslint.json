@@ -39,13 +39,37 @@
       true,
       {
         "order": [
-          "static-field",
-          "instance-field",
-          "static-method",
-          "instance-method"
+          "public-static-field",
+          "protected-static-field",
+          "private-static-field",
+          "public-instance-field",
+          "protected-instance-field",
+          "private-instance-field",
+          "public-static-accessor",
+          "public-instance-accessor",
+          "protected-static-accessor",
+          "protected-instance-accessor",
+          "private-static-accessor",
+          "private-instance-accessor",
+          "public-constructor",
+          "public-static-method",
+          "public-instance-method",
+          "protected-constructor",
+          "protected-static-method",
+          "protected-instance-method",
+          "private-constructor",
+          "private-static-method",
+          "private-instance-method"
         ]
       }
     ],
+    "member-access": [
+      true,
+      "check-accessor",
+      "check-constructor",
+      "check-parameter-property"
+    ],
+    "no-for-in": true,
     "no-console": [
       true,
       "debug",
@@ -65,7 +89,7 @@
     "no-var-requires": false,
     "object-literal-key-quotes": [
       true,
-      "as-needed"
+      "consistent"
     ],
     "quotemark": [
       true,
@@ -111,7 +135,7 @@
       "options": [
         "ban-keywords",
         "check-format",
-        "allow-pascal-case"
+        "allow-leading-underscore"
       ]
     },
     "whitespace": {
@@ -139,9 +163,18 @@
     "no-shadowed-variable": false,
     "max-classes-per-file": [
       true,
-      1
+      5
     ],
-    "no-consecutive-blank-lines": true
+    "no-consecutive-blank-lines": true,
+    "no-unused-expression": [
+      true,
+      "allow-new"
+    ],
+    "class-name": true,
+    "file-name-casing": [true, "kebab-case"],
+    "interface-name": [true, "always-prefix"],
+    "one-variable-per-declaration": true,
+    "unnecessary-else": true
   },
   "rulesDirectory": []
 }

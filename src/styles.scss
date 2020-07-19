@@ -8,7 +8,7 @@
 }
 
 //$aspectRatio: "1/1";
-$aspectRatio: "16/9";
+$aspectRatio: '16/9';
 //$aspectRatio: "4/3";
 //$aspectRatio: "9/16";
 
@@ -50,18 +50,14 @@ $aspectRatio: "16/9";
   margin: 4px;
 }
 
-.inspector {
-  position: absolute;
-  right: 0px;
-  width: auto;
-  height: 100%;
-  opacity: 0.8;
-}
-
-.loading {
+.content-fade-out {
   animation: fade-out 1s;
   animation-fill-mode: forwards;
   pointer-events: none;
+}
+
+.content-fade-in {
+  animation: fade-in 1s;
 }
 
 @keyframes fade-out {
@@ -70,5 +66,15 @@ $aspectRatio: "16/9";
   }
   to {
     opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
