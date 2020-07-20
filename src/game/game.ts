@@ -34,7 +34,7 @@ export class Game {
 
     glowLayer.intensity = 6;
 
-    ambientLight.intensity = 0.3;
+    ambientLight.intensity = 0.4;
     // light.intensity = 0.55;
     ambientLight.diffuse = new Color3(0.8, 0.3, 0.3);
     ambientLight.specular = new Color3(0.0, 0.3, 0.0);

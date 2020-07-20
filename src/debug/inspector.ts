@@ -32,8 +32,8 @@ export class Inspector {
     }
   }
 
-  public addEventListener(type: 'hide' | 'show', listener: EventListenerOrEventListenerObject | null, options?: boolean | AddEventListenerOptions): void {
-    this.eventTarget.addEventListener(type, listener, options);
+  public addEventListener(type: 'hide' | 'show', listener: (this: Inspector, event: Event) => void, options?: boolean | AddEventListenerOptions): void {
+    this.eventTarget.addEventListener(type, event => listener.call(this, event), options);
   }
 
   public show(): void {
