@@ -1,5 +1,6 @@
 import { RenderGrid } from './render-grid';
-import { Color3, HighlightLayer, IDisposable, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
+import { Color3, HighlightLayer, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3, Matrix } from '@babylonjs/core';
+import { WireBuilder } from 'common/wire-builder';
 
 export class CursorMoveEvent extends Event {
   public constructor(type: string, public readonly position: Vector3) {
@@ -8,7 +9,6 @@ export class CursorMoveEvent extends Event {
 }
 
 export class LevelEditor {
-  private static readonly cursorOffset = new Vector3(0.5, 0.0, 0.5);
   private cursor?: Mesh;
   private renderGrid: RenderGrid;
   private pointerDefaults: {
@@ -92,67 +92,44 @@ export class LevelEditor {
         this.positionElement.innerText = position.x + ' , ' + position.y + ' , ' + position.z;
       }
 
-      this.cursor.position = position.add(LevelEditor.cursorOffset);
+      this.cursor.position = position;
     }
   }
+  private createBoxCursor(): Mesh {
+    const mesh = WireBuilder.createBox('cursor', {}, this.renderGrid.utilityLayerScene);
 
-  private createCursorMesh(): void {
-    const box = Mesh.CreateLines(
-      'box',
-      [
-        new Vector3(-0.5, 0.0, -0.5),
-        new Vector3(+0.5, 0.0, -0.5),
-        new Vector3(+0.5, 0.0, +0.5),
-        new Vector3(-0.5, 0.0, +0.5),
-        new Vector3(-0.5, 0.0, -0.5),
-        new Vector3(-0.5, 1.0, -0.5),
-        new Vector3(+0.5, 1.0, -0.5),
-        new Vector3(+0.5, 0.0, -0.5),
-        new Vector3(+0.5, 1.0, -0.5),
-        new Vector3(+0.5, 1.0, +0.5),
-        new Vector3(+0.5, 0.0, +0.5),
-        new Vector3(+0.5, 1.0, +0.5),
-        new Vector3(-0.5, 1.0, +0.5),
-        new Vector3(-0.5, 0.0, +0.5),
-        new Vector3(-0.5, 1.0, +0.5),
-        new Vector3(-0.5, 1.0, -0.5)
-      ],
-      this.renderGrid.utilityLayerScene
-    );
-
-    box.enableEdgesRendering();
-    box.edgesWidth = 2;
-    box.color = new Color3(1, 1, 1);
-    box.edgesColor = box.color.toColor4();
-
-    if (this.renderGrid.glowLayer) this.renderGrid.glowLayer.referenceMeshToUseItsOwnMaterial(box);
+    if (this.renderGrid.glowLayer) this.renderGrid.glowLayer.referenceMeshToUseItsOwnMaterial(mesh);
 
     const scene = this.renderGrid.utilityLayerScene;
-    this.cursor = box;
-
     const highlight = new HighlightLayer('hl1', scene);
-    highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
+
+    highlight.addMesh(mesh, new Color3(1.0, 1.0, 1.0));
+
+    mesh.setPivotMatrix(Matrix.Translation(0.5, 0.5, 0.5), false);
+
+    return mesh;
   }
 
-  private createCursorMesh2(): void {
-    const size = {
-      width: 1,
-      height: 1
-    };
+  private createPlaneCursor(): Mesh {
+    const size = {};
 
     const scene = this.renderGrid.utilityLayerScene;
-    this.cursor = MeshBuilder.CreateGround('selector', size, scene);
+    const mesh = MeshBuilder.CreateGround('selector', size, scene);
     const material = new StandardMaterial('selector', scene);
     material.emissiveColor = new Color3(0.8, 0.8, 0.8);
 
-    this.cursor.material = material;
+    mesh.material = material;
 
     const highlight = new HighlightLayer('hl1', scene);
-    highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
+    highlight.addMesh(mesh, new Color3(1.0, 1.0, 1.0));
+
+    mesh.setPivotMatrix(Matrix.Translation(0.5, 0.0, 0.5), false);
+
+    return mesh;
   }
 
   private enableCursor(): void {
-    this.createCursorMesh();
+    this.cursor = this.createBoxCursor();
 
     this.controlElement.addEventListener('mousemove', this.onMouseMove);
     this.controlElement.addEventListener('mousedown', this.onMouseClick);

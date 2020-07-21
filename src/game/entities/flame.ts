@@ -14,7 +14,7 @@ export class Flame extends Entity {
     const emitter0 = Mesh.CreateBox('emitter0', 0.1, this.scene);
     emitter0.isVisible = false;
 
-    particleSystem.particleTexture = new Texture('https://www.babylonjs-playground.com/textures/fire.jpg', this.scene);
+    particleSystem.particleTexture = new Texture('assets/textures/fire.jpg', this.scene);
     particleSystem.blendMode = ParticleSystem.BLENDMODE_ONEONE;
 
     particleSystem.minAngularSpeed = -0.5;
