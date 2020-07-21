@@ -2,8 +2,8 @@ import { RenderGrid } from './render-grid';
 import { Color3, HighlightLayer, Matrix, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
 import { WireBuilder } from 'common/wire-builder';
 
-export class CursorMoveEvent extends Event {
-  public constructor(type: string, public readonly position: Vector3) {
+export class CursorEvent extends Event {
+  public constructor(type: string, public readonly position: Vector3, public readonly button: number) {
     super(type);
   }
 }
@@ -22,7 +22,7 @@ export class LevelEditor {
 
   public constructor(private controlElement: HTMLElement, private readonly scene: Scene, private readonly gridSize: number = 100) {
     this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseClick = this.onMouseClick.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
 
     this.eventTarget = new EventTarget();
   }
@@ -52,14 +52,16 @@ export class LevelEditor {
     this.scene.preventDefaultOnPointerUp = this.pointerDefaults.preventDefaultOnPointerUp;
   }
 
-  public addEventListener(type: 'cursormove', listener: (this: LevelEditor, event: CursorMoveEvent) => void, options?: boolean | AddEventListenerOptions): void {
+  public addEventListener(type: 'cursormove' | 'cursordown', listener: (this: LevelEditor, event: CursorEvent) => void, options?: boolean | AddEventListenerOptions): void {
     this.eventTarget.addEventListener(type, event => listener.call(this, event), options);
   }
 
-  private onMouseClick(event: MouseEvent): void {
+  private onMouseDown(event: MouseEvent): void {
     const info = this.scene.pick(event.offsetX, event.offsetY);
 
-    if (info && info.hit && info.pickedMesh) {
+    this.eventTarget.dispatchEvent(new CursorEvent('cursordown', this.cursor.position, event.button));
+
+    if (info && info.hit && info.pickedMesh && event.button === 2) {
       let pickedMesh = info.pickedMesh;
 
       if (!pickedMesh.isAnInstance) {
@@ -86,7 +88,7 @@ export class LevelEditor {
       position.z = Math.floor(position.z);
 
       if (!position.equals(this.previousCursor)) {
-        this.eventTarget.dispatchEvent(new CursorMoveEvent('cursormove', position));
+        this.eventTarget.dispatchEvent(new CursorEvent('cursormove', position, event.button));
         this.previousCursor = position;
 
         this.positionElement.innerText = position.x + ' , ' + position.y + ' , ' + position.z;
@@ -132,14 +134,14 @@ export class LevelEditor {
     this.cursor = this.createBoxCursor();
 
     this.controlElement.addEventListener('mousemove', this.onMouseMove);
-    this.controlElement.addEventListener('mousedown', this.onMouseClick);
+    this.controlElement.addEventListener('mousedown', this.onMouseDown);
 
     this.showPosition();
   }
 
   private disableCursor(): void {
     this.controlElement.removeEventListener('mousemove', this.onMouseMove);
-    this.controlElement.removeEventListener('mousedown', this.onMouseClick);
+    this.controlElement.removeEventListener('mousedown', this.onMouseDown);
 
     if (this.cursor) this.cursor.dispose();
 
