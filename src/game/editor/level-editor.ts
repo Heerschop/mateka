@@ -1,5 +1,5 @@
 import { RenderGrid } from './render-grid';
-import { Color3, HighlightLayer, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3, Matrix } from '@babylonjs/core';
+import { Color3, HighlightLayer, Matrix, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
 import { WireBuilder } from 'common/wire-builder';
 
 export class CursorMoveEvent extends Event {
