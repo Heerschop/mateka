@@ -25,6 +25,12 @@ export class Game {
 
     this.levelCamera = camera;
     this.levelEditor = editor;
+
+    editor.addEventListener('cursordown', event => {
+      if (event.button === 0) {
+        this.entityManager.createEntity('D', event.position);
+      }
+    });
   }
 
   public async loadLevel(file: string): Promise<void> {

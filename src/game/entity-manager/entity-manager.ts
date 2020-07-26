@@ -50,6 +50,10 @@ export class EntityManager {
       const instance = registeredEntity.entity.createInstance(position.add(this.offset));
 
       registeredEntity.instances.push(instance);
+
+      if (this._mode === ManagerMode.EnterEdit) {
+        registeredEntity.entity.onEnterEdit([instance]);
+      }
     }
   }
 
@@ -99,7 +103,7 @@ export class EntityManager {
         }
       }
 
-      value = this._mode;
+      this._mode = value;
     }
   }
 }
