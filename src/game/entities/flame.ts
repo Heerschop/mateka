@@ -82,7 +82,7 @@ class Matrix {
 
     if (!axisY) return false;
 
-    return axisY[position.z] !== undefined;
+    return axisY[position.z];
   }
 
   public boxTest(vectorA: Vector3, vectorB: Vector3): boolean {
@@ -222,9 +222,6 @@ export class Flame extends Entity {
 
     matrix.add(instances);
 
-    console.log('matrix.first:', matrix.first);
-    console.log('matrix.count:', matrix.count);
-
     while (matrix.count > 0) {
       const position1 = matrix.first.clone();
       const position2 = position1.clone();
@@ -233,10 +230,17 @@ export class Flame extends Entity {
       while (matrix.boxTest(position1, position2.add(vectorZ))) position2.addInPlace(vectorZ);
       while (matrix.boxTest(position1, position2.add(vectorY))) position2.addInPlace(vectorY);
 
+      console.log('------------------------------');
+      console.log('matrix.first:', matrix.first);
+      console.log('matrix.count:', matrix.count);
+      console.log('position1:', position1);
+      console.log('position2:', position2);
+
       matrix.reset(position1, position2);
 
       this.createBox(position1, position2);
     }
+    console.log('------------------------------');
   }
 
   public removeInstance(instance: IEntityInstance): void {}
@@ -281,10 +285,6 @@ export class Flame extends Entity {
       height: position2.y - position1.y + 1,
       width: position2.x - position1.x + 1
     };
-    console.log('size:', size);
-    console.log('size:', position2.x - position1.x + 1);
-    console.log('position2.x:', position2.x);
-    console.log('position1.x:', position1.x);
     const box = EntityBuilder.createBox('EditWire', size);
     box.position = position1.add(new Vector3(-0.5 + size.width / 2, -0.5 + size.height / 2, -0.5 + size.depth / 2));
     this.editables.push(box);
