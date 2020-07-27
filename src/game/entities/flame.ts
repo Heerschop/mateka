@@ -14,19 +14,18 @@ class Matrix {
     return this._count;
   }
 
-  public get first(): Vector3 {
-    // const vector = this.minimum;
+  public get first(): Vector3 | undefined {
+    const vector = Vector3.Zero();
 
-    // // while instances
+    for (vector.x = 0; this.instances && vector.x <= this.instances.length; vector.x++) {
+      for (vector.y = 0; this.instances[vector.x] && vector.y <= this.instances[vector.x].length; vector.y++) {
+        for (vector.z = 0; this.instances[vector.x][vector.y] && vector.z <= this.instances[vector.x][vector.y].length; vector.z++) {
+          if (this.instances[vector.x][vector.y][vector.z]) return vector.subtract(this.offset);
+        }
+      }
+    }
 
-    // for (vector.y = vectorA.y; vector.y <= vectorB.y; vector.y++) {
-    //   for (vector.z = vectorA.z; vector.z <= vectorB.z; vector.z++) {
-    //     for (vector.x = vectorA.x; vector.x <= vectorB.x; vector.x++) {
-    //       if (!this.test(vector)) return false;
-    //     }
-    //   }
-    // }
-    return this.minimum;
+    return undefined;
   }
 
   public constructor(size: number) {
@@ -36,6 +35,8 @@ class Matrix {
 
     this.minimum = new Vector3(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
     this.maximum = new Vector3(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
+
+    this._count = 0;
   }
 
   public add(instances: IEntityInstance[]): void {
@@ -221,8 +222,11 @@ export class Flame extends Entity {
 
     matrix.add(instances);
 
+    console.log('matrix.first:', matrix.first);
+    console.log('matrix.count:', matrix.count);
+
     while (matrix.count > 0) {
-      const position1 = matrix.minimum.clone();
+      const position1 = matrix.first.clone();
       const position2 = position1.clone();
 
       while (matrix.boxTest(position1, position2.add(vectorX))) position2.addInPlace(vectorX);

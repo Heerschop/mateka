@@ -171,8 +171,14 @@
       "allow-new"
     ],
     "class-name": true,
-    "file-name-casing": [true, "kebab-case"],
-    "interface-name": [true, "always-prefix"],
+    "file-name-casing": [
+      true,
+      "kebab-case"
+    ],
+    "interface-name": [
+      true,
+      "always-prefix"
+    ],
     "one-variable-per-declaration": true,
     "unnecessary-else": true
   },
