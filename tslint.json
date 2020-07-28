@@ -83,6 +83,7 @@
       true,
       "ignore-params"
     ],
+    "no-conditional-assignment": false,
     "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
