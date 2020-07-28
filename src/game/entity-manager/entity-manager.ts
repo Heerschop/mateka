@@ -52,12 +52,16 @@ export class EntityManager {
       registeredEntity.instances.push(instance);
 
       if (this._mode === ManagerMode.EnterEdit) {
-        registeredEntity.entity.onEnterEdit([instance]);
+        // registeredEntity.entity.onEnterEdit([instance]);
+        this.setMode(ManagerMode.LeaveEdit);
+        this.setMode(ManagerMode.EnterEdit);
       }
     }
   }
 
-  // public removeEntity(position: Vector3): void { }
+  public removeEntity(position: Vector3): void {
+    // registeredEntity.instances.push(instance);
+  }
 
   public registerEntity(entities: { [id: string]: EntityConstructor }): void {
     for (const [id, constructor] of Object.entries(entities)) {

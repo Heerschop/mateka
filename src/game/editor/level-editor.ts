@@ -57,24 +57,24 @@ export class LevelEditor {
   }
 
   private onMouseDown(event: MouseEvent): void {
-    const info = this.scene.pick(event.offsetX, event.offsetY);
+    // const info = this.scene.pick(event.offsetX, event.offsetY);
 
     this.eventTarget.dispatchEvent(new CursorEvent('cursordown', this.cursor.position, event.button));
 
-    if (info && info.hit && info.pickedMesh && event.button === 2) {
-      let pickedMesh = info.pickedMesh;
+    // if (info && info.hit && info.pickedMesh && event.button === 2) {
+    //   let pickedMesh = info.pickedMesh;
 
-      if (!pickedMesh.isAnInstance) {
-        const mesh = info.pickedMesh as Mesh;
+    //   if (!pickedMesh.isAnInstance) {
+    //     const mesh = info.pickedMesh as Mesh;
 
-        if (mesh.instances.length > 1) {
-          pickedMesh = mesh.instances[0];
-          mesh.position = pickedMesh.position;
-        }
-      }
+    //     if (mesh.instances.length > 1) {
+    //       pickedMesh = mesh.instances[0];
+    //       mesh.position = pickedMesh.position;
+    //     }
+    //   }
 
-      pickedMesh.dispose();
-    }
+    // pickedMesh.dispose();
+    // }
   }
 
   private onMouseMove(event: MouseEvent): void {

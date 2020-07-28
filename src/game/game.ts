@@ -30,6 +30,10 @@ export class Game {
       if (event.button === 0) {
         this.entityManager.createEntity('D', event.position);
       }
+
+      if (event.button === 2) {
+        this.entityManager.removeEntity(event.position);
+      }
     });
   }
 
