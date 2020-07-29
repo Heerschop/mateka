@@ -49,7 +49,7 @@ export class EntityManager {
     this.instances = new Map();
   }
 
-  public createEntity(id: string, position: Vector3): void {
+  public appendEntity(id: string, position: Vector3): void {
     const registeredEntity = this.entities.get(id);
 
     if (registeredEntity) {

@@ -28,7 +28,7 @@ export class Game {
 
     editor.addEventListener('cursordown', event => {
       if (event.button === 0) {
-        this.entityManager.createEntity('D', event.position);
+        this.entityManager.appendEntity('D', event.position);
       }
 
       if (event.button === 2) {
@@ -74,7 +74,7 @@ export class Game {
     // this.entityManager.createEntity('D', new Vector3(2, 0, 0));
 
     for (const entity of entities) {
-      this.entityManager.createEntity(entity.id, entity.position);
+      this.entityManager.appendEntity(entity.id, entity.position);
     }
   }
 

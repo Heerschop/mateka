@@ -57,9 +57,11 @@ class Matrix {
         axisX[position.y] = axisY;
       }
 
-      axisY[position.z] = true;
+      if (!axisY[position.z]) {
+        axisY[position.z] = true;
 
-      this._count++;
+        this._count++;
+      }
 
       if (instance.position.x < this.minimum.x) this.minimum.x = instance.position.x;
       if (instance.position.y < this.minimum.y) this.minimum.y = instance.position.y;
