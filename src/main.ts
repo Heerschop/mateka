@@ -1,10 +1,11 @@
 import { environment } from 'environments/environment';
-import { Color4, Engine, EngineInstrumentation, Scene, SceneInstrumentation } from '@babylonjs/core';
+import { Color4, Engine, EngineInstrumentation, Scene, SceneInstrumentation, Vector3 } from '@babylonjs/core';
 import { GameInspector } from 'debug/game-inspector';
 import { Loader } from 'loader/loader';
 import { Menu } from 'menu/menu';
 import { Game } from 'game/game';
 import { testStuff } from 'test-stuff';
+import { VectorMap } from 'game/vector-map';
 
 async function main(canvasId: string): Promise<void> {
   const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -60,3 +61,19 @@ async function main(canvasId: string): Promise<void> {
 console.log('Version: ', environment.app.version + ' (' + environment.app.env + ')');
 
 main('scene');
+const date = Date.now();
+const map = new VectorMap<boolean>(-10, 10);
+
+console.log(map.add(new Vector3(1, 1, 1), true));
+console.log(map.add(new Vector3(2, 1, 1), true));
+console.log(map.add(new Vector3(3, 1, 1), true));
+
+console.log(map.remove(new Vector3(1, 1, 1)));
+console.log(map.remove(new Vector3(2, 1, 1)));
+console.log(map.remove(new Vector3(3, 1, 1)));
+
+console.log(map.remove(new Vector3(1, 1, 1)));
+console.log(map.remove(new Vector3(2, 1, 1)));
+console.log(map.remove(new Vector3(3, 1, 1)));
+
+console.log('timespan:', Date.now() - date);
