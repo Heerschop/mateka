@@ -12,7 +12,9 @@ export class VectorMap<T> {
   public constructor(minimum: number, maximum: number) {
     const size = maximum - minimum;
 
-    this.offset = new Vector3(size / 2, size / 2, size / 2);
+    minimum *= -1;
+
+    this.offset = new Vector3(minimum, minimum, minimum);
 
     this.values = [];
 
