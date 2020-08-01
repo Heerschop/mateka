@@ -59,6 +59,9 @@ async function main(canvasId: string): Promise<void> {
 }
 
 console.log('Version: ', environment.app.version + ' (' + environment.app.env + ')');
+// #!if debug === 'true'
+console.log('Debug are checks enabled!');
+// #!endif
 
 main('scene');
 const date = Date.now();
