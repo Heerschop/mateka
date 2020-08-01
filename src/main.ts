@@ -70,6 +70,9 @@ const map = new VectorMap<boolean>(-10, 10);
 console.log(map.add(new Vector3(1, 1, 1), true));
 console.log(map.add(new Vector3(2, 1, 1), true));
 console.log(map.add(new Vector3(3, 1, 1), true));
+console.log(map.add(new Vector3(-10, 1, 1), true));
+
+console.log('size:', map.size);
 
 // console.log(map.remove(new Vector3(1, 1, 1)));
 // console.log(map.remove(new Vector3(2, 1, 1)));

@@ -172,7 +172,7 @@ export class Flame extends Entity {
     }
 
     // const matrix = new Matrix2(20.5);
-    const matrix = new Matrix(-10, +10);
+    const matrix = new Matrix(-10.5, +10.5);
     const vectorX = new Vector3(1, 0, 0);
     const vectorY = new Vector3(0, 1, 0);
     const vectorZ = new Vector3(0, 0, 1);

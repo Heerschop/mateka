@@ -10,8 +10,8 @@ export class VectorMap<T> {
     return this._count;
   }
 
-  public constructor(minimum: number, maximum: number) {
-    const size = maximum - minimum;
+  public constructor(private readonly minimum: number, private readonly maximum: number) {
+    const size = maximum - minimum + 1;
 
     minimum *= -1;
 
@@ -45,23 +45,38 @@ export class VectorMap<T> {
   }
 
   public contains(vector: Vector3): boolean {
-    vector = vector.add(this.offset);
+    const offset = vector.add(this.offset);
 
-    return this.values[vector.x][vector.y][vector.z] !== undefined;
+    // #!if debug === 'true'
+
+    this.rangeTest(vector);
+    // #!endif
+
+    return this.values[offset.x][offset.y][offset.z] !== undefined;
   }
 
   public get(vector: Vector3): T {
-    vector = vector.add(this.offset);
+    const offset = vector.add(this.offset);
 
-    return this.values[vector.x][vector.y][vector.z];
+    // #!if debug === 'true'
+
+    this.rangeTest(vector);
+    // #!endif
+
+    return this.values[offset.x][offset.y][offset.z];
   }
 
   public add(vector: Vector3, value: T): number {
     const offset = vector.add(this.offset);
 
     // #!if debug === 'true'
+
+    this.rangeTest(vector);
+    // #!endif
+
+    // #!if debug === 'true'
     if (this.values[offset.x][offset.y][offset.z] !== undefined) {
-      throw new Error('Vector already exists: ' + JSON.stringify(vector));
+      throw new Error('Vector already exists: ' + JSON.stringify(vector, null, 4));
     }
     // #!endif
 
@@ -76,8 +91,12 @@ export class VectorMap<T> {
     const offset = vector.add(this.offset);
 
     // #!if debug === 'true'
+    this.rangeTest(vector);
+    // #!endif
+
+    // #!if debug === 'true'
     if (this.values[offset.x][offset.y][offset.z] === undefined) {
-      throw new Error('Vector not found: ' + JSON.stringify(vector));
+      throw new Error('Vector not found: ' + JSON.stringify(vector, null, 4));
     }
     // #!endif
 
@@ -87,4 +106,12 @@ export class VectorMap<T> {
 
     return this._count;
   }
+
+  // #!if debug === 'true'
+  private rangeTest(vector: Vector3): void {
+    if (vector.x < this.minimum || vector.x > this.maximum) throw new Error('Vector is out of range: ' + JSON.stringify(vector, null, 4));
+    if (vector.y < this.minimum || vector.y > this.maximum) throw new Error('Vector is out of range: ' + JSON.stringify(vector, null, 4));
+    if (vector.z < this.minimum || vector.z > this.maximum) throw new Error('Vector is out of range: ' + JSON.stringify(vector, null, 4));
+  }
+  // #!endif
 }
