@@ -71,12 +71,12 @@ console.log(map.add(new Vector3(1, 1, 1), true));
 console.log(map.add(new Vector3(2, 1, 1), true));
 console.log(map.add(new Vector3(3, 1, 1), true));
 
-console.log(map.remove(new Vector3(1, 1, 1)));
-console.log(map.remove(new Vector3(2, 1, 1)));
-console.log(map.remove(new Vector3(3, 1, 1)));
-
-console.log(map.remove(new Vector3(1, 1, 1)));
-console.log(map.remove(new Vector3(2, 1, 1)));
-console.log(map.remove(new Vector3(3, 1, 1)));
+// console.log(map.remove(new Vector3(1, 1, 1)));
+// console.log(map.remove(new Vector3(2, 1, 1)));
+// console.log(map.remove(new Vector3(3, 1, 1)));
 
 console.log('timespan:', Date.now() - date);
+
+for (const [key, value] of map.entries()) {
+  console.log(key, value);
+}

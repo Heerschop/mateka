@@ -1,4 +1,4 @@
-module.exports = {
+module.exports2 = {
   // ...
   module: {
     rules: [

@@ -2,10 +2,51 @@ import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
 import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 import { EntityBuilder } from 'game/editor/entity-builder';
 import { AutoMap } from 'common';
+import { VectorMap } from 'game/vector-map';
 
-class Matrix {
-  public readonly minimum: Vector3;
-  public readonly maximum: Vector3;
+class Matrix extends VectorMap<boolean> {
+  public get first(): Vector3 | undefined {
+    for (const [vector, value] of this.entries()) {
+      return vector;
+    }
+
+    return undefined;
+  }
+
+  public boxTest(vectorA: Vector3, vectorB: Vector3): boolean {
+    const vector = Vector3.Zero();
+
+    for (vector.y = vectorA.y; vector.y <= vectorB.y; vector.y++) {
+      for (vector.z = vectorA.z; vector.z <= vectorB.z; vector.z++) {
+        for (vector.x = vectorA.x; vector.x <= vectorB.x; vector.x++) {
+          if (!this.contains(vector)) return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  public reset(vectorA: Vector3, vectorB: Vector3): void {
+    const vector = Vector3.Zero();
+
+    for (vector.y = vectorA.y; vector.y <= vectorB.y; vector.y++) {
+      for (vector.z = vectorA.z; vector.z <= vectorB.z; vector.z++) {
+        for (vector.x = vectorA.x; vector.x <= vectorB.x; vector.x++) {
+          this.remove(vector);
+        }
+      }
+    }
+  }
+
+  public addList(instances: IEntityInstance[]): void {
+    for (const instance of instances) {
+      this.add(instance.position, true);
+    }
+  }
+}
+
+class Matrix2 {
   private readonly instances: boolean[][][];
   private readonly offset: Vector3;
   private _count: number;
@@ -33,13 +74,10 @@ class Matrix {
 
     this.instances = [];
 
-    this.minimum = new Vector3(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
-    this.maximum = new Vector3(Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, Number.MIN_SAFE_INTEGER);
-
     this._count = 0;
   }
 
-  public add(instances: IEntityInstance[]): void {
+  public addList(instances: IEntityInstance[]): void {
     for (const instance of instances) {
       const position = instance.position.add(this.offset);
 
@@ -62,14 +100,6 @@ class Matrix {
 
         this._count++;
       }
-
-      if (instance.position.x < this.minimum.x) this.minimum.x = instance.position.x;
-      if (instance.position.y < this.minimum.y) this.minimum.y = instance.position.y;
-      if (instance.position.z < this.minimum.z) this.minimum.z = instance.position.z;
-
-      if (instance.position.x > this.maximum.x) this.maximum.x = instance.position.x;
-      if (instance.position.y > this.maximum.y) this.maximum.y = instance.position.y;
-      if (instance.position.z > this.maximum.z) this.maximum.z = instance.position.z;
     }
   }
 
@@ -141,12 +171,13 @@ export class Flame extends Entity {
       return;
     }
 
-    const matrix = new Matrix(20.5);
+    // const matrix = new Matrix2(20.5);
+    const matrix = new Matrix(-10, +10);
     const vectorX = new Vector3(1, 0, 0);
     const vectorY = new Vector3(0, 1, 0);
     const vectorZ = new Vector3(0, 0, 1);
 
-    matrix.add(instances);
+    matrix.addList(instances);
 
     while (matrix.count > 0) {
       const position1 = matrix.first.clone();

@@ -1,6 +1,7 @@
 import { Vector3 } from '@babylonjs/core';
 
 export class VectorMap<T> {
+  public readonly size;
   private _count = 0;
   private readonly values: T[][][];
   private readonly offset: Vector3;
@@ -27,6 +28,20 @@ export class VectorMap<T> {
         }
       }
     }
+
+    this.size = size;
+  }
+
+  public *entries(): Generator<[Vector3, T]> {
+    for (let axisX = 0; axisX < this.size; axisX++) {
+      for (let axisY = 0; axisY < this.size; axisY++) {
+        for (let axisZ = 0; axisZ < this.size; axisZ++) {
+          const value = this.values[axisX][axisY][axisZ];
+
+          if (value) yield [new Vector3(axisX, axisY, axisZ).subtract(this.offset), value];
+        }
+      }
+    }
   }
 
   public contains(vector: Vector3): boolean {
@@ -42,20 +57,34 @@ export class VectorMap<T> {
   }
 
   public add(vector: Vector3, value: T): number {
-    vector = vector.add(this.offset);
+    const offset = vector.add(this.offset);
 
-    if (this.values[vector.x][vector.y][vector.z] === undefined) {
-      if (value !== undefined) this._count++;
-    } else {
-      if (value === undefined) this._count--;
+    // #!if debug === 'true'
+    if (this.values[offset.x][offset.y][offset.z] !== undefined) {
+      throw new Error('Vector already exists: ' + JSON.stringify(vector));
     }
+    // #!endif
 
-    this.values[vector.x][vector.y][vector.z] = value;
+    this.values[offset.x][offset.y][offset.z] = value;
+
+    this._count++;
 
     return this._count;
   }
 
   public remove(vector: Vector3): number {
-    return this.add(vector, undefined);
+    const offset = vector.add(this.offset);
+
+    // #!if debug === 'true'
+    if (this.values[offset.x][offset.y][offset.z] === undefined) {
+      throw new Error('Vector not found: ' + JSON.stringify(vector));
+    }
+    // #!endif
+
+    this.values[offset.x][offset.y][offset.z] = undefined;
+
+    this._count--;
+
+    return this._count;
   }
 }
