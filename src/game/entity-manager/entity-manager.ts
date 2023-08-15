@@ -1,6 +1,7 @@
 import { AbstractMesh, Animatable, Scene, Vector3 } from '@babylonjs/core';
 import { Entity } from './entity';
 import 'extensions/array-remove';
+import { VectorMap } from 'game/vector-map';
 
 export enum ManagerMode {
   EnterEdit,
@@ -10,7 +11,11 @@ export enum ManagerMode {
   ResetGame
 }
 
-export type EntityConstructor = (scene: Scene) => Entity;
+export type EntityConstructor = (fieldInfo: IField) => Entity;
+
+export interface IEntityInstance {
+  position: Vector3;
+}
 
 interface IRegisteredEntity {
   entity: Entity | null;
@@ -18,13 +23,15 @@ interface IRegisteredEntity {
   construct: EntityConstructor;
 }
 
-export interface IEntityInstance {
-  position: Vector3;
-}
-
 interface ICreatedInstance {
   instance: IEntityInstance;
   registeredEntity: IRegisteredEntity;
+}
+
+export interface IField {
+  readonly scene: Scene;
+  readonly minimum: number;
+  readonly maximum: number;
 }
 
 export class EntityManager {
@@ -36,7 +43,7 @@ export class EntityManager {
     [ManagerMode.ResetGame, 'onResetGame']
   ]);
   private readonly entities: Map<string, IRegisteredEntity>;
-  private readonly instances: Map<number, ICreatedInstance>;
+  private readonly instances: VectorMap<ICreatedInstance>;
   private readonly offset = new Vector3(0.5, 0.5, 0.5);
   private _mode: ManagerMode;
 
@@ -44,27 +51,25 @@ export class EntityManager {
     return this._mode;
   }
 
-  public constructor(private readonly scene: Scene) {
+  public constructor(private readonly field: IField) {
     this.entities = new Map();
-    this.instances = new Map();
+    this.instances = new VectorMap<ICreatedInstance>(field.minimum, field.maximum);
   }
 
   public appendEntity(id: string, position: Vector3): void {
     const registeredEntity = this.entities.get(id);
 
-    if (registeredEntity) {
-      if (!registeredEntity.entity) registeredEntity.entity = registeredEntity.construct(this.scene);
+    if (!registeredEntity) throw new Error('AppendEntity error, id notfound: ' + id);
 
-      const instance = registeredEntity.entity.createInstance(position.add(this.offset));
+    position = position.add(this.offset);
+    const value = { instance: null, registeredEntity: registeredEntity };
 
-      registeredEntity.instances.push(instance);
+    if (this.instances.set(position, value)) {
+      if (!registeredEntity.entity) registeredEntity.entity = registeredEntity.construct(this.field);
 
-      const instanceId = position.x * 10000 + position.y * 100 + position.z;
+      value.instance = registeredEntity.entity.createInstance(position);
 
-      this.instances.set(instanceId, {
-        instance: instance,
-        registeredEntity: registeredEntity
-      });
+      registeredEntity.instances.push(value.instance);
 
       if (this._mode === ManagerMode.EnterEdit) {
         // registeredEntity.entity.onEnterEdit([instance]);
@@ -75,12 +80,9 @@ export class EntityManager {
   }
 
   public removeEntity(position: Vector3): void {
-    const instanceId = position.x * 10000 + position.y * 100 + position.z;
-    const instance = this.instances.get(instanceId);
+    position = position.add(this.offset);
 
-    console.log('removeEntity.position:', position);
-    console.log('removeEntity.instance:', instance);
-    console.log('removeEntity.instances:', this.instances);
+    const instance = this.instances.get(position);
 
     if (instance) {
       instance.registeredEntity.entity.removeInstance(instance.instance);
@@ -91,7 +93,7 @@ export class EntityManager {
         this.setMode(ManagerMode.EnterEdit);
       }
 
-      this.instances.delete(instanceId);
+      this.instances.delete(position);
     }
   }
 

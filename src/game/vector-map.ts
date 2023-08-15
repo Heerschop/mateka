@@ -3,7 +3,7 @@ import { Vector3 } from '@babylonjs/core';
 export class VectorMap<T> {
   public readonly size;
   private _count = 0;
-  private readonly values: T[][][];
+  private readonly items: T[][][];
   private readonly offset: Vector3;
 
   public get count(): number {
@@ -17,14 +17,14 @@ export class VectorMap<T> {
 
     this.offset = new Vector3(minimum, minimum, minimum);
 
-    this.values = [];
+    this.items = [];
 
     for (let axisX = 0; axisX < size; axisX++) {
-      this.values[axisX] = [];
+      this.items[axisX] = [];
       for (let axisY = 0; axisY < size; axisY++) {
-        this.values[axisX][axisY] = [];
+        this.items[axisX][axisY] = [];
         for (let axisZ = 0; axisZ < size; axisZ++) {
-          this.values[axisX][axisY][axisZ] = undefined;
+          this.items[axisX][axisY][axisZ] = undefined;
         }
       }
     }
@@ -32,75 +32,99 @@ export class VectorMap<T> {
     this.size = size;
   }
 
-  public *entries(): Generator<[Vector3, T]> {
+  public *entries(): IterableIterator<[Vector3, T]> {
     for (let axisX = 0; axisX < this.size; axisX++) {
       for (let axisY = 0; axisY < this.size; axisY++) {
         for (let axisZ = 0; axisZ < this.size; axisZ++) {
-          const value = this.values[axisX][axisY][axisZ];
+          const value = this.items[axisX][axisY][axisZ];
 
-          if (value) yield [new Vector3(axisX, axisY, axisZ).subtract(this.offset), value];
+          if (value) yield [new Vector3(axisX, axisY, axisZ).subtractInPlace(this.offset), value];
         }
       }
     }
   }
 
-  public contains(vector: Vector3): boolean {
+  public *keys(): IterableIterator<Vector3> {
+    for (let axisX = 0; axisX < this.size; axisX++) {
+      for (let axisY = 0; axisY < this.size; axisY++) {
+        for (let axisZ = 0; axisZ < this.size; axisZ++) {
+          const value = this.items[axisX][axisY][axisZ];
+
+          if (value) yield new Vector3(axisX, axisY, axisZ).subtractInPlace(this.offset);
+        }
+      }
+    }
+  }
+
+  public *values(): IterableIterator<T> {
+    for (let axisX = 0; axisX < this.size; axisX++) {
+      for (let axisY = 0; axisY < this.size; axisY++) {
+        for (let axisZ = 0; axisZ < this.size; axisZ++) {
+          const value = this.items[axisX][axisY][axisZ];
+
+          if (value) yield value;
+        }
+      }
+    }
+  }
+
+  public has(vector: Vector3): boolean {
     const offset = vector.add(this.offset);
 
-    // #!if debug === 'true'
+    // #!debug
+    this.rangeCheck(vector);
 
-    this.rangeTest(vector);
-    // #!endif
-
-    return this.values[offset.x][offset.y][offset.z] !== undefined;
+    return this.items[offset.x][offset.y][offset.z] !== undefined;
   }
 
   public get(vector: Vector3): T {
     const offset = vector.add(this.offset);
 
-    // #!if debug === 'true'
+    // #!debug
+    this.rangeCheck(vector);
 
-    this.rangeTest(vector);
-    // #!endif
-
-    return this.values[offset.x][offset.y][offset.z];
+    return this.items[offset.x][offset.y][offset.z];
   }
 
-  public add(vector: Vector3, value: T): number {
+  public set(vector: Vector3, value: T): boolean {
     const offset = vector.add(this.offset);
 
     // #!if debug === 'true'
+    this.rangeCheck(vector);
 
-    this.rangeTest(vector);
-    // #!endif
-
-    // #!if debug === 'true'
-    if (this.values[offset.x][offset.y][offset.z] !== undefined) {
-      throw new Error('Vector already exists: ' + JSON.stringify(vector, null, 4));
+    if (this.items[offset.x][offset.y][offset.z] !== undefined) {
+      return false;
     }
     // #!endif
 
-    this.values[offset.x][offset.y][offset.z] = value;
+    this.items[offset.x][offset.y][offset.z] = value;
 
     this._count++;
 
-    return this._count;
+    return true;
   }
 
-  public remove(vector: Vector3): number {
+  public clear(): void {
+    for (let axisX = 0; axisX < this.size; axisX++) {
+      for (let axisY = 0; axisY < this.size; axisY++) {
+        for (let axisZ = 0; axisZ < this.size; axisZ++) {
+          this.items[axisX][axisY][axisZ] = undefined;
+        }
+      }
+    }
+  }
+
+  public delete(vector: Vector3): number {
     const offset = vector.add(this.offset);
 
-    // #!if debug === 'true'
-    this.rangeTest(vector);
-    // #!endif
+    // #!debug
+    this.rangeCheck(vector);
 
-    // #!if debug === 'true'
-    if (this.values[offset.x][offset.y][offset.z] === undefined) {
+    if (this.items[offset.x][offset.y][offset.z] === undefined) {
       throw new Error('Vector not found: ' + JSON.stringify(vector, null, 4));
     }
-    // #!endif
 
-    this.values[offset.x][offset.y][offset.z] = undefined;
+    this.items[offset.x][offset.y][offset.z] = undefined;
 
     this._count--;
 
@@ -108,10 +132,10 @@ export class VectorMap<T> {
   }
 
   // #!if debug === 'true'
-  private rangeTest(vector: Vector3): void {
+  // #!endif
+  private rangeCheck(vector: Vector3): void {
     if (vector.x < this.minimum || vector.x > this.maximum) throw new Error('Vector is out of range: ' + JSON.stringify(vector, null, 4));
     if (vector.y < this.minimum || vector.y > this.maximum) throw new Error('Vector is out of range: ' + JSON.stringify(vector, null, 4));
     if (vector.z < this.minimum || vector.z > this.maximum) throw new Error('Vector is out of range: ' + JSON.stringify(vector, null, 4));
   }
-  // #!endif
 }

@@ -1,9 +1,10 @@
 import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
 import { Animatable, Animation, GlowLayer, Mesh, Scene, SpotLight, Vector3 } from '@babylonjs/core';
 import { EntityBuilder } from 'game/editor/entity-builder';
+import { IField } from 'game/entity-manager/entity-manager';
 
 export class Lantern extends Entity {
-  public constructor(private readonly scene: Scene, private readonly glowLayer?: GlowLayer) {
+  public constructor(private readonly field: IField, private readonly glowLayer?: GlowLayer) {
     super(EntityType.Light);
   }
 
@@ -20,7 +21,7 @@ export class Lantern extends Entity {
 
       // if (this.glowLayer) this.glowLayer.referenceMeshToUseItsOwnMaterial(box);
 
-      // const highlight = new HighlightLayer('hl1', this.scene);
+      // const highlight = new HighlightLayer('hl1', this.field.scene);
       // highlight.addMesh(box, new Color3(1.0, 1.0, 1.0));
 
       // instance.editInstance = box;
@@ -70,14 +71,14 @@ export class Lantern extends Entity {
 
       cone.animations.push(animation1, animation2);
 
-      this.scene.beginAnimation(cone, 0, 160, true);
+      this.field.scene.beginAnimation(cone, 0, 160, true);
     }
   }
 
   public removeInstance(instance: IEntityInstance): void {}
 
   public createInstance(position: Vector3): IEntityInstance {
-    const light = new SpotLight('Lantern', position, new Vector3(0, -1, 0), Math.PI / 1, 9, this.scene);
+    const light = new SpotLight('Lantern', position, new Vector3(0, -1, 0), Math.PI / 1, 9, this.field.scene);
 
     const animation1 = new Animation('LanternAnimation1', 'direction.x', 30, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
 
@@ -123,7 +124,7 @@ export class Lantern extends Entity {
 
     light.animations.push(animation1, animation2);
 
-    this.animatables.push(this.scene.beginAnimation(light, 0, 160, true));
+    this.animatables.push(this.field.scene.beginAnimation(light, 0, 160, true));
 
     return { position };
   }
