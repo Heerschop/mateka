@@ -6,6 +6,7 @@ import { Menu } from 'menu/menu';
 import { Game } from 'game/game';
 import { testStuff } from 'test-stuff';
 import { VectorMap } from 'game/vector-map';
+import { VectorSet } from 'game/vector-set';
 
 async function main(canvasId: string): Promise<void> {
   const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -65,14 +66,14 @@ console.log('Debug are checks enabled!');
 
 main('scene');
 const date = Date.now();
-const map = new VectorMap<boolean>(-10, 10);
+const vectorMap = new VectorMap<boolean>(-30, 30);
 
-console.log(map.add(new Vector3(1, 1, 1), true));
-console.log(map.add(new Vector3(2, 1, 1), true));
-console.log(map.add(new Vector3(3, 1, 1), true));
-console.log(map.add(new Vector3(-10, 1, 1), true));
+console.log(vectorMap.set(new Vector3(1, 1, 1), true));
+console.log(vectorMap.set(new Vector3(2, 1, 1), true));
+console.log(vectorMap.set(new Vector3(3, 1, 1), true));
+console.log(vectorMap.set(new Vector3(-10, 1, 1), true));
 
-console.log('size:', map.size);
+console.log('size:', vectorMap.size);
 
 // console.log(map.remove(new Vector3(1, 1, 1)));
 // console.log(map.remove(new Vector3(2, 1, 1)));
@@ -80,6 +81,36 @@ console.log('size:', map.size);
 
 console.log('timespan:', Date.now() - date);
 
-for (const [key, value] of map.entries()) {
+for (const [key, value] of vectorMap.entries()) {
+  console.log(key, value);
+}
+
+const set = new Set<number>();
+set.add(1);
+set.add(1);
+set.add(2);
+set.add(3);
+
+for (const [v1, v2] of set.entries()) {
+  console.log(v1, v2);
+}
+
+const map = new Map<number, string>();
+
+map.set(1, 'aa');
+map.set(1, 'aa');
+map.set(2, 'bb');
+map.set(3, 'bb');
+
+for (const [v1, v2] of map.entries()) {
+  console.log(v1, v2);
+}
+
+console.log('vectorSet--------------');
+const vectorSet = new VectorSet(-30, +30);
+vectorSet.add(new Vector3(1, 1, 1));
+vectorSet.add(new Vector3(2, 1, 1));
+
+for (const [key, value] of vectorSet.entries()) {
   console.log(key, value);
 }

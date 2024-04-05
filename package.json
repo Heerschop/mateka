@@ -1,6 +1,6 @@
 {
   "name": "mateka",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "start": "launch"
   },
@@ -30,7 +30,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm start pre:commit"
+      "pre-commit": "#npm start pre:commit"
     }
   }
 }

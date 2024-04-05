@@ -1,5 +1,6 @@
 import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
 import { AbstractMesh, Color3, GlowLayer, Material, Mesh, MeshBuilder, Scene, StandardMaterial, Texture, Vector3 } from '@babylonjs/core';
+import { IField } from 'game/entity-manager/entity-manager';
 
 interface ITileInstance extends IEntityInstance {
   mesh: AbstractMesh;
@@ -7,7 +8,7 @@ interface ITileInstance extends IEntityInstance {
 export class Tile extends Entity {
   private mesh?: Mesh;
 
-  public constructor(private readonly material: string, private readonly scene: Scene, private readonly glowLayer?: GlowLayer) {
+  public constructor(private readonly material: string, private readonly field: IField, private readonly glowLayer?: GlowLayer) {
     super(EntityType.Tile);
   }
 
@@ -37,7 +38,7 @@ export class Tile extends Entity {
         height: 1.0,
         depth: 1.0
       };
-      this.mesh = MeshBuilder.CreateBox(this.material, size, this.scene);
+      this.mesh = MeshBuilder.CreateBox(this.material, size, this.field.scene);
 
       this.mesh.material = this.createMaterial(this.material);
 
@@ -56,13 +57,13 @@ export class Tile extends Entity {
   }
 
   private createMaterial(name: string): Material {
-    const material = new StandardMaterial(name, this.scene);
+    const material = new StandardMaterial(name, this.field.scene);
 
-    material.diffuseTexture = new Texture('assets/textures/' + name + '/' + name + '-diffuse.png', this.scene);
-    material.bumpTexture = new Texture('assets/textures/' + name + '/' + name + '-normal.png', this.scene);
+    material.diffuseTexture = new Texture('assets/textures/' + name + '/' + name + '-diffuse.png', this.field.scene);
+    material.bumpTexture = new Texture('assets/textures/' + name + '/' + name + '-normal.png', this.field.scene);
 
     if (this.glowLayer) {
-      const texture = new Texture('assets/textures/' + name + '/' + name + '-emissive.png', this.scene);
+      const texture = new Texture('assets/textures/' + name + '/' + name + '-emissive.png', this.field.scene);
 
       material.emissiveTexture = texture;
     }

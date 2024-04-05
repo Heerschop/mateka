@@ -20,7 +20,7 @@ export class Game {
     const camera = new LevelCamera('LevelCamera', 16, scene);
     const editor = new LevelEditor(controlElement, scene);
 
-    this.entityManager = new EntityManager(scene);
+    this.entityManager = new EntityManager({ scene: scene, minimum: -30.5, maximum: +30.5 });
     this.levelLoader = new LevelLoader();
 
     this.levelCamera = camera;
@@ -51,21 +51,21 @@ export class Game {
     ambientLight.groundColor = new Color3(0.3, 0.8, 0.3);
 
     this.entityManager.registerEntity({
-      0: scene => new Tile('ruin-tile-01', scene),
-      1: scene => new Tile('stylized-bush-01', scene),
-      2: scene => new Tile('stylized-floor-tile-01', scene),
-      3: scene => new Tile('stylized-ground-02', scene),
-      4: scene => new Tile('stylized-ground-rock-09', scene),
-      5: scene => new Tile('stylized-tree-bark-04', scene),
-      6: scene => new Tile('stylized-wall-rock-01', scene),
-      7: scene => new Tile('random-stone-tiles-02', scene),
-      8: scene => new Tile('broken-tiles-dry', scene),
-      9: scene => new Tile('abandon-brick-wall-03', scene),
-      A: scene => new Tile('stone-and-sand', scene),
-      B: scene => new Lantern(scene),
-      C: scene => new Flashing(scene),
-      D: scene => new Flame(scene),
-      E: scene => new Tile('lava', scene, glowLayer)
+      0: field => new Tile('ruin-tile-01', field),
+      1: field => new Tile('stylized-bush-01', field),
+      2: field => new Tile('stylized-floor-tile-01', field),
+      3: field => new Tile('stylized-ground-02', field),
+      4: field => new Tile('stylized-ground-rock-09', field),
+      5: field => new Tile('stylized-tree-bark-04', field),
+      6: field => new Tile('stylized-wall-rock-01', field),
+      7: field => new Tile('random-stone-tiles-02', field),
+      8: field => new Tile('broken-tiles-dry', field),
+      9: field => new Tile('abandon-brick-wall-03', field),
+      A: field => new Tile('stone-and-sand', field),
+      B: field => new Lantern(field),
+      C: field => new Flashing(field),
+      D: field => new Flame(field),
+      E: field => new Tile('lava', field, glowLayer)
     });
 
     // this.entityManager.createEntity('0', new Vector3(0, 0, 0));

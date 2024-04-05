@@ -1,4 +1,4 @@
-module.exports2 = {
+module.exports_disable = {
   // ...
   module: {
     rules: [

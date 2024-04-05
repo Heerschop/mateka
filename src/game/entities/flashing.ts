@@ -1,9 +1,10 @@
 import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
 import { AbstractMesh, Animatable, Animation, Color3, Mesh, MeshBuilder, Scene, SpotLight, Vector3 } from '@babylonjs/core';
+import { IField } from 'game/entity-manager/entity-manager';
 
 export class Flashing extends Entity {
   private mesh?: Mesh;
-  public constructor(private readonly scene: Scene) {
+  public constructor(private readonly field: IField) {
     super(EntityType.Light);
   }
 
@@ -15,7 +16,7 @@ export class Flashing extends Entity {
       height: 0.4,
       depth: 0.4
     };
-    const light = new SpotLight('FlashingLight', position, new Vector3(1, 0, 0), Math.PI / 5, 2, this.scene);
+    const light = new SpotLight('FlashingLight', position, new Vector3(1, 0, 0), Math.PI / 5, 2, this.field.scene);
     let instance: AbstractMesh;
 
     if (!this.mesh) {
@@ -26,7 +27,7 @@ export class Flashing extends Entity {
           diameterBottom: 0.4,
           height: 1
         },
-        this.scene
+        this.field.scene
       );
 
       this.mesh.rotation.x = Math.PI / 2;
@@ -87,7 +88,7 @@ export class Flashing extends Entity {
     light.specular = new Color3(0.1, 0.1, 0.1);
     light.intensity = 2;
 
-    this.animatables.push(this.scene.beginAnimation(light, 0, 200, true), this.scene.beginAnimation(instance, 0, 200, true));
+    this.animatables.push(this.field.scene.beginAnimation(light, 0, 200, true), this.field.scene.beginAnimation(instance, 0, 200, true));
 
     return { position };
   }
