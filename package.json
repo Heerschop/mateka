@@ -7,7 +7,7 @@
   "private": true,
   "dependencies": {
     "@angular/compiler": "~10.0.3",
-    "@angular/core": "~10.0.3",
+    "@angular/core": "~10.2.5",
     "@babylonjs/core": "^4.2.0-alpha.23",
     "@babylonjs/inspector": "^4.2.0-alpha.23",
     "@babylonjs/loaders": "^4.2.0-alpha.23",
