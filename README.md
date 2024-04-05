@@ -10,6 +10,11 @@ Isometric puzzle game running in the browser. It's not a game yet :-)
 
 ### Basic setup
 ``` bash
+# Download resources
+curl --location --silent https://github.com/Heerschop/mateka/releases/download/textures-0.0.0/textures.tar.xz | tar -xvJ -C src/assets
+
+nvm use
 npm install
-npm start # And select serve
+
+npm start serve:dev
 ```
