@@ -83,6 +83,7 @@
       true,
       "ignore-params"
     ],
+    "no-conditional-assignment": false,
     "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
@@ -171,8 +172,14 @@
       "allow-new"
     ],
     "class-name": true,
-    "file-name-casing": [true, "kebab-case"],
-    "interface-name": [true, "always-prefix"],
+    "file-name-casing": [
+      true,
+      "kebab-case"
+    ],
+    "interface-name": [
+      true,
+      "always-prefix"
+    ],
     "one-variable-per-declaration": true,
     "unnecessary-else": true
   },

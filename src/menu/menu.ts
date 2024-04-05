@@ -57,12 +57,8 @@ export class Menu {
     document.body.appendChild(element);
   }
 
-  public addEventListener(
-    type: 'enteredit' | 'leaveedit' | 'startgame' | 'pausegame' | 'resetgame',
-    listener: EventListenerOrEventListenerObject | null,
-    options?: boolean | AddEventListenerOptions
-  ): void {
-    this.eventTarget.addEventListener(type, listener, options);
+  public addEventListener(type: 'enteredit' | 'leaveedit' | 'startgame' | 'pausegame' | 'resetgame', listener: (this: Menu, event: Event) => void, options?: boolean | AddEventListenerOptions): void {
+    this.eventTarget.addEventListener(type, event => listener.call(this, event), options);
   }
 
   public show(): void {
@@ -100,7 +96,7 @@ export class Menu {
         height: 100%;
         left: 0px;
         top: 0px;
-        background: #00000060;
+        background: #00000040;
         display: flex;
       }
     `

@@ -1,5 +1,12 @@
 import { RenderGrid } from './render-grid';
-import { Color3, HighlightLayer, IDisposable, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
+import { Color3, HighlightLayer, Matrix, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3 } from '@babylonjs/core';
+import { WireBuilder } from 'common/wire-builder';
+
+export class CursorEvent extends Event {
+  public constructor(type: string, public readonly position: Vector3, public readonly button: number) {
+    super(type);
+  }
+}
 
 export class LevelEditor {
   private cursor?: Mesh;
@@ -8,10 +15,16 @@ export class LevelEditor {
     preventDefaultOnPointerDown: boolean;
     preventDefaultOnPointerUp: boolean;
   };
+  private readonly eventTarget: EventTarget;
+  private previousCursor: Vector3;
+
+  private positionElement: HTMLElement;
 
   public constructor(private controlElement: HTMLElement, private readonly scene: Scene, private readonly gridSize: number = 100) {
     this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseClick = this.onMouseClick.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+
+    this.eventTarget = new EventTarget();
   }
 
   public enable(): void {
@@ -39,23 +52,29 @@ export class LevelEditor {
     this.scene.preventDefaultOnPointerUp = this.pointerDefaults.preventDefaultOnPointerUp;
   }
 
-  private onMouseClick(event: MouseEvent): void {
-    const info = this.scene.pick(event.offsetX, event.offsetY);
+  public addEventListener(type: 'cursormove' | 'cursordown', listener: (this: LevelEditor, event: CursorEvent) => void, options?: boolean | AddEventListenerOptions): void {
+    this.eventTarget.addEventListener(type, event => listener.call(this, event), options);
+  }
 
-    if (info && info.hit && info.pickedMesh) {
-      let pickedMesh = info.pickedMesh;
+  private onMouseDown(event: MouseEvent): void {
+    // const info = this.scene.pick(event.offsetX, event.offsetY);
 
-      if (!pickedMesh.isAnInstance) {
-        const mesh = info.pickedMesh as Mesh;
+    this.eventTarget.dispatchEvent(new CursorEvent('cursordown', this.cursor.position, event.button));
 
-        if (mesh.instances.length > 1) {
-          pickedMesh = mesh.instances[0];
-          mesh.position = pickedMesh.position;
-        }
-      }
+    // if (info && info.hit && info.pickedMesh && event.button === 2) {
+    //   let pickedMesh = info.pickedMesh;
 
-      pickedMesh.dispose();
-    }
+    //   if (!pickedMesh.isAnInstance) {
+    //     const mesh = info.pickedMesh as Mesh;
+
+    //     if (mesh.instances.length > 1) {
+    //       pickedMesh = mesh.instances[0];
+    //       mesh.position = pickedMesh.position;
+    //     }
+    //   }
+
+    // pickedMesh.dispose();
+    // }
   }
 
   private onMouseMove(event: MouseEvent): void {
@@ -64,79 +83,101 @@ export class LevelEditor {
     if (info && info.pickedPoint) {
       const position = info.pickedPoint;
 
-      position.x -= ((position.x + 1000) % 1) - 0.5;
-      position.z -= ((position.z + 1000) % 1) - 0.5;
+      position.x = Math.floor(position.x);
+      position.y = 0;
+      position.z = Math.floor(position.z);
+
+      if (!position.equals(this.previousCursor)) {
+        this.eventTarget.dispatchEvent(new CursorEvent('cursormove', position, event.button));
+        this.previousCursor = position;
+
+        this.positionElement.innerText = position.x + ' , ' + position.y + ' , ' + position.z;
+      }
 
       this.cursor.position = position;
     }
   }
+  private createBoxCursor(): Mesh {
+    const mesh = WireBuilder.createBox('cursor', {}, this.renderGrid.utilityLayerScene);
 
-  private createCursorMesh(): void {
-    const box = Mesh.CreateLines(
-      'box',
-      [
-        new Vector3(-0.5, 0.0, -0.5),
-        new Vector3(+0.5, 0.0, -0.5),
-        new Vector3(+0.5, 0.0, +0.5),
-        new Vector3(-0.5, 0.0, +0.5),
-        new Vector3(-0.5, 0.0, -0.5),
-        new Vector3(-0.5, 1.0, -0.5),
-        new Vector3(+0.5, 1.0, -0.5),
-        new Vector3(+0.5, 0.0, -0.5),
-        new Vector3(+0.5, 1.0, -0.5),
-        new Vector3(+0.5, 1.0, +0.5),
-        new Vector3(+0.5, 0.0, +0.5),
-        new Vector3(+0.5, 1.0, +0.5),
-        new Vector3(-0.5, 1.0, +0.5),
-        new Vector3(-0.5, 0.0, +0.5),
-        new Vector3(-0.5, 1.0, +0.5),
-        new Vector3(-0.5, 1.0, -0.5)
-      ],
-      this.renderGrid.utilityLayerScene
-    );
-
-    box.enableEdgesRendering();
-    box.edgesWidth = 2;
-    box.color = new Color3(1, 1, 1);
-    box.edgesColor = box.color.toColor4();
-
-    if (this.renderGrid.glowLayer) this.renderGrid.glowLayer.referenceMeshToUseItsOwnMaterial(box);
+    if (this.renderGrid.glowLayer) this.renderGrid.glowLayer.referenceMeshToUseItsOwnMaterial(mesh);
 
     const scene = this.renderGrid.utilityLayerScene;
-    this.cursor = box;
-
     const highlight = new HighlightLayer('hl1', scene);
-    highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
+
+    highlight.addMesh(mesh, new Color3(1.0, 1.0, 1.0));
+
+    mesh.setPivotMatrix(Matrix.Translation(0.5, 0.5, 0.5), false);
+
+    return mesh;
   }
 
-  private createCursorMesh2(): void {
-    const size = {
-      width: 1,
-      height: 1
-    };
+  private createPlaneCursor(): Mesh {
+    const size = {};
 
     const scene = this.renderGrid.utilityLayerScene;
-    this.cursor = MeshBuilder.CreateGround('selector', size, scene);
+    const mesh = MeshBuilder.CreateGround('selector', size, scene);
     const material = new StandardMaterial('selector', scene);
     material.emissiveColor = new Color3(0.8, 0.8, 0.8);
 
-    this.cursor.material = material;
+    mesh.material = material;
 
     const highlight = new HighlightLayer('hl1', scene);
-    highlight.addMesh(this.cursor, new Color3(1.0, 1.0, 1.0));
+    highlight.addMesh(mesh, new Color3(1.0, 1.0, 1.0));
+
+    mesh.setPivotMatrix(Matrix.Translation(0.5, 0.0, 0.5), false);
+
+    return mesh;
   }
 
   private enableCursor(): void {
-    this.createCursorMesh();
+    this.cursor = this.createBoxCursor();
 
     this.controlElement.addEventListener('mousemove', this.onMouseMove);
-    this.controlElement.addEventListener('mousedown', this.onMouseClick);
+    this.controlElement.addEventListener('mousedown', this.onMouseDown);
+
+    this.showPosition();
   }
 
   private disableCursor(): void {
     this.controlElement.removeEventListener('mousemove', this.onMouseMove);
-    this.controlElement.removeEventListener('mousedown', this.onMouseClick);
+    this.controlElement.removeEventListener('mousedown', this.onMouseDown);
 
     if (this.cursor) this.cursor.dispose();
+
+    this.hidePosition();
+  }
+
+  private showPosition(): void {
+    const element = document.createElement('div');
+
+    element.className = 'cursor-position';
+
+    document.body.appendChild(element);
+
+    const style = document.createElement('style');
+    document.head.appendChild(style);
+    style.sheet.insertRule(
+      `
+      .cursor-position {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        background: #00000040;
+        display: flex;
+        font-weight: bold;
+        font-size: 24px;
+      }
+    `
+    );
+
+    this.positionElement = element;
+  }
+
+  private hidePosition(): void {
+    if (this.positionElement) {
+      this.positionElement.remove();
+      this.positionElement = undefined;
+    }
   }
 }

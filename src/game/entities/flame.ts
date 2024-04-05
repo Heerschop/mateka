@@ -1,10 +1,203 @@
 import { Entity, EntityType, IEntityInstance } from 'game/entity-manager';
 import { BaseParticleSystem, Color3, Color4, GlowLayer, GPUParticleSystem, HighlightLayer, IParticleSystem, Mesh, ParticleSystem, Scene, Texture, Vector3 } from '@babylonjs/core';
 import { EntityBuilder } from 'game/editor/entity-builder';
+import { AutoMap } from 'common';
+import { VectorMap } from 'game/vector-map';
+
+class Matrix extends VectorMap<boolean> {
+  public get first(): Vector3 | undefined {
+    for (const [vector, value] of this.entries()) {
+      return vector;
+    }
+
+    return undefined;
+  }
+
+  public boxTest(vectorA: Vector3, vectorB: Vector3): boolean {
+    const vector = Vector3.Zero();
+
+    for (vector.y = vectorA.y; vector.y <= vectorB.y; vector.y++) {
+      for (vector.z = vectorA.z; vector.z <= vectorB.z; vector.z++) {
+        for (vector.x = vectorA.x; vector.x <= vectorB.x; vector.x++) {
+          if (!this.contains(vector)) return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  public reset(vectorA: Vector3, vectorB: Vector3): void {
+    const vector = Vector3.Zero();
+
+    for (vector.y = vectorA.y; vector.y <= vectorB.y; vector.y++) {
+      for (vector.z = vectorA.z; vector.z <= vectorB.z; vector.z++) {
+        for (vector.x = vectorA.x; vector.x <= vectorB.x; vector.x++) {
+          this.remove(vector);
+        }
+      }
+    }
+  }
+
+  public addList(instances: IEntityInstance[]): void {
+    for (const instance of instances) {
+      this.add(instance.position, true);
+    }
+  }
+}
+
+class Matrix2 {
+  private readonly instances: boolean[][][];
+  private readonly offset: Vector3;
+  private _count: number;
+
+  public get count(): number {
+    return this._count;
+  }
+
+  public get first(): Vector3 | undefined {
+    const vector = Vector3.Zero();
+
+    for (vector.x = 0; this.instances && vector.x <= this.instances.length; vector.x++) {
+      for (vector.y = 0; this.instances[vector.x] && vector.y <= this.instances[vector.x].length; vector.y++) {
+        for (vector.z = 0; this.instances[vector.x][vector.y] && vector.z <= this.instances[vector.x][vector.y].length; vector.z++) {
+          if (this.instances[vector.x][vector.y][vector.z]) return vector.subtract(this.offset);
+        }
+      }
+    }
+
+    return undefined;
+  }
+
+  public constructor(size: number) {
+    this.offset = new Vector3(size, size, size);
+
+    this.instances = [];
+
+    this._count = 0;
+  }
+
+  public addList(instances: IEntityInstance[]): void {
+    for (const instance of instances) {
+      const position = instance.position.add(this.offset);
+
+      let axisX = this.instances[position.x];
+
+      if (!axisX) {
+        axisX = [];
+        this.instances[position.x] = axisX;
+      }
+
+      let axisY = axisX[position.y];
+
+      if (!axisY) {
+        axisY = [];
+        axisX[position.y] = axisY;
+      }
+
+      if (!axisY[position.z]) {
+        axisY[position.z] = true;
+
+        this._count++;
+      }
+    }
+  }
+
+  public test(position: Vector3): boolean {
+    position = position.add(this.offset);
+
+    const axisX = this.instances[position.x];
+
+    if (!axisX) return false;
+
+    const axisY = axisX[position.y];
+
+    if (!axisY) return false;
+
+    return axisY[position.z];
+  }
+
+  public boxTest(vectorA: Vector3, vectorB: Vector3): boolean {
+    const vector = Vector3.Zero();
+
+    for (vector.y = vectorA.y; vector.y <= vectorB.y; vector.y++) {
+      for (vector.z = vectorA.z; vector.z <= vectorB.z; vector.z++) {
+        for (vector.x = vectorA.x; vector.x <= vectorB.x; vector.x++) {
+          if (!this.test(vector)) return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  public remove(vector: Vector3): void {
+    const position = vector.add(this.offset);
+    const axisX = this.instances[position.x];
+
+    if (!axisX) return;
+
+    const axisY = axisX[position.y];
+
+    if (!axisY) return;
+
+    if (axisY[position.z]) {
+      axisY[position.z] = false;
+      this._count--;
+    }
+  }
+
+  public reset(vectorA: Vector3, vectorB: Vector3): void {
+    const vector = Vector3.Zero();
+
+    for (vector.y = vectorA.y; vector.y <= vectorB.y; vector.y++) {
+      for (vector.z = vectorA.z; vector.z <= vectorB.z; vector.z++) {
+        for (vector.x = vectorA.x; vector.x <= vectorB.x; vector.x++) {
+          this.remove(vector);
+        }
+      }
+    }
+  }
+}
 
 export class Flame extends Entity {
   public constructor(private readonly scene: Scene, private readonly glowLayer?: GlowLayer) {
     super(EntityType.Light);
+  }
+
+  public onEnterEdit(instances: IEntityInstance[]): void {
+    if (instances.length === 1) {
+      super.onEnterEdit(instances);
+      return;
+    }
+
+    // const matrix = new Matrix2(20.5);
+    const matrix = new Matrix(-10.5, +10.5);
+    const vectorX = new Vector3(1, 0, 0);
+    const vectorY = new Vector3(0, 1, 0);
+    const vectorZ = new Vector3(0, 0, 1);
+
+    matrix.addList(instances);
+
+    while (matrix.count > 0) {
+      const position1 = matrix.first.clone();
+      const position2 = position1.clone();
+
+      while (matrix.boxTest(position1, position2.add(vectorX))) position2.addInPlace(vectorX);
+      while (matrix.boxTest(position1, position2.add(vectorZ))) position2.addInPlace(vectorZ);
+      while (matrix.boxTest(position1, position2.add(vectorY))) position2.addInPlace(vectorY);
+
+      console.log('------------------------------');
+      console.log('matrix.first:', matrix.first);
+      console.log('matrix.count:', matrix.count);
+      console.log('position1:', position1);
+      console.log('position2:', position2);
+
+      matrix.reset(position1, position2);
+
+      this.createBox(position1, position2);
+    }
+    console.log('------------------------------');
   }
 
   public removeInstance(instance: IEntityInstance): void {}
@@ -14,7 +207,7 @@ export class Flame extends Entity {
     const emitter0 = Mesh.CreateBox('emitter0', 0.1, this.scene);
     emitter0.isVisible = false;
 
-    particleSystem.particleTexture = new Texture('https://www.babylonjs-playground.com/textures/fire.jpg', this.scene);
+    particleSystem.particleTexture = new Texture('assets/textures/fire.jpg', this.scene);
     particleSystem.blendMode = ParticleSystem.BLENDMODE_ONEONE;
 
     particleSystem.minAngularSpeed = -0.5;
@@ -42,6 +235,16 @@ export class Flame extends Entity {
     this.particles.push(particleSystem);
 
     return { position };
+  }
+  private createBox(position1: Vector3, position2: Vector3): void {
+    const size = {
+      depth: position2.z - position1.z + 1,
+      height: position2.y - position1.y + 1,
+      width: position2.x - position1.x + 1
+    };
+    const box = EntityBuilder.createBox('EditWire', size);
+    box.position = position1.add(new Vector3(-0.5 + size.width / 2, -0.5 + size.height / 2, -0.5 + size.depth / 2));
+    this.editables.push(box);
   }
 
   private createParticleSystem(useGPU: boolean): IParticleSystem & BaseParticleSystem {

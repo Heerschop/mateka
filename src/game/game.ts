@@ -25,6 +25,16 @@ export class Game {
 
     this.levelCamera = camera;
     this.levelEditor = editor;
+
+    editor.addEventListener('cursordown', event => {
+      if (event.button === 0) {
+        this.entityManager.appendEntity('D', event.position);
+      }
+
+      if (event.button === 2) {
+        this.entityManager.removeEntity(event.position);
+      }
+    });
   }
 
   public async loadLevel(file: string): Promise<void> {
@@ -34,7 +44,7 @@ export class Game {
 
     glowLayer.intensity = 6;
 
-    ambientLight.intensity = 0.3;
+    ambientLight.intensity = 0.4;
     // light.intensity = 0.55;
     ambientLight.diffuse = new Color3(0.8, 0.3, 0.3);
     ambientLight.specular = new Color3(0.0, 0.3, 0.0);
@@ -64,7 +74,7 @@ export class Game {
     // this.entityManager.createEntity('D', new Vector3(2, 0, 0));
 
     for (const entity of entities) {
-      this.entityManager.createEntity(entity.id, entity.position);
+      this.entityManager.appendEntity(entity.id, entity.position);
     }
   }
 

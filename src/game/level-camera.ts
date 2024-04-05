@@ -34,7 +34,7 @@ export class LevelCamera extends ArcRotateCamera {
 
   public constructor(name: string, levelSize: number, scene: Scene, aspect = 1.75, scale = 1.0) {
     // super(name, -Math.PI / 4, Math.PI / 3.4, levelSize * 30, new Vector3(0, 0, 0), scene);
-    super(name, -Math.PI / 4, Math.PI / 3.4, levelSize * 3, new Vector3(0, 0, 0), scene);
+    super(name, -Math.PI / 4, Math.PI / 3.288535, levelSize * 3, new Vector3(0, 0, 0), scene);
 
     this._size = levelSize;
     this._aspect = aspect;
