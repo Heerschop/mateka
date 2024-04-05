@@ -66,7 +66,7 @@ console.log('Debug are checks enabled!');
 
 main('scene');
 const date = Date.now();
-const vectorMap = new VectorMap<boolean>(-10, 10);
+const vectorMap = new VectorMap<boolean>(-30, 30);
 
 console.log(vectorMap.set(new Vector3(1, 1, 1), true));
 console.log(vectorMap.set(new Vector3(2, 1, 1), true));
@@ -107,7 +107,7 @@ for (const [v1, v2] of map.entries()) {
 }
 
 console.log('vectorSet--------------');
-const vectorSet = new VectorSet(-10, +10);
+const vectorSet = new VectorSet(-30, +30);
 vectorSet.add(new Vector3(1, 1, 1));
 vectorSet.add(new Vector3(2, 1, 1));
 

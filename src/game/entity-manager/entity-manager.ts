@@ -57,6 +57,8 @@ export class EntityManager {
   }
 
   public appendEntity(id: string, position: Vector3): void {
+    if (id === ' ') return;
+
     const registeredEntity = this.entities.get(id);
 
     if (!registeredEntity) throw new Error('AppendEntity error, id notfound: ' + id);

@@ -20,7 +20,7 @@ export class Game {
     const camera = new LevelCamera('LevelCamera', 16, scene);
     const editor = new LevelEditor(controlElement, scene);
 
-    this.entityManager = new EntityManager({ scene: scene, minimum: -10.5, maximum: +10.5 });
+    this.entityManager = new EntityManager({ scene: scene, minimum: -30.5, maximum: +30.5 });
     this.levelLoader = new LevelLoader();
 
     this.levelCamera = camera;
